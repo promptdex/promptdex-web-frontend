@@ -25,6 +25,8 @@ import {
     IconSelector,
     IconSettings,
     IconSettings2,
+    IconTemplate,
+    IconPencil,
     IconUser,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
@@ -236,24 +238,32 @@ export const Sidebar = () => {
                         !isSidebarOpen && 'items-center justify-center px-0'
                     )}
                 >
-                    {/* <Link href="/recent" className={isSidebarOpen ? 'w-full' : ''}>
+                    <Link href="/templates" className={isSidebarOpen ? 'w-full' : ''}>
                         <Button
-                            size={isSidebarOpen ? 'xs' : 'icon-sm'}
-                            variant="bordered"
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant="ghost"
                             rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'Recent'}
+                            tooltip={isSidebarOpen ? undefined : 'Templates'}
                             tooltipSide="right"
-                            className={cn(
-                                'text-muted-foreground w-full justify-start',
-                                !isSidebarOpen && 'w-auto justify-center'
-                            )}
+                            className={cn(isSidebarOpen && 'relative w-full', 'justify-start', !isSidebarOpen && 'justify-center')}
                         >
-                            <IconHistory size={14} strokeWidth={2} />
-                            {isSidebarOpen && 'Recent'}
-                            {isSidebarOpen && <span className="inline-flex flex-1" />}
-                            {isSidebarOpen && <IconChevronRight size={14} strokeWidth={2} />}
+                            <IconTemplate size={16} strokeWidth={2} />
+                            {isSidebarOpen && 'Templates Library'}
                         </Button>
-                    </Link> */}
+                    </Link>
+                    <Link href="/designer" className={isSidebarOpen ? 'w-full' : ''}>
+                        <Button
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant="ghost"
+                            rounded="lg"
+                            tooltip={isSidebarOpen ? undefined : 'Designer'}
+                            tooltipSide="right"
+                            className={cn(isSidebarOpen && 'relative w-full', 'justify-start', !isSidebarOpen && 'justify-center')}
+                        >
+                            <IconPencil size={16} strokeWidth={2} />
+                            {isSidebarOpen && 'Template Designer'}
+                        </Button>
+                    </Link>
                 </Flex>
 
                 {false ? (

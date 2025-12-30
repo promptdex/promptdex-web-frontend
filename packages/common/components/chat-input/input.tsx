@@ -16,7 +16,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useAgentStream } from '../../hooks/agent-provider';
 import { useChatEditor } from '../../hooks/use-editor';
 import { useChatStore } from '../../store';
-import { ExamplePrompts } from '../exmaple-prompts';
+import { TemplateLibrary } from '../template-library';
 import { ChatModeButton, GeneratingStatus, SendStopButton, WebSearchButton } from './chat-actions';
 import { ChatEditor } from './chat-editor';
 import { ImageUpload } from './image-upload';
@@ -248,7 +248,7 @@ export const ChatInput = ({
                     )}
 
                     {renderChatBottom()}
-                    {!currentThreadId && showGreeting && <ExamplePrompts />}
+                    {!currentThreadId && showGreeting && <TemplateLibrary />}
 
                     {/* <ChatFooter /> */}
                 </Flex>
