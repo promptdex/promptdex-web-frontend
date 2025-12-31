@@ -18,6 +18,7 @@ import { useChatEditor } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { TemplateListing } from '@repo/common/components';
 import { ChatModeButton, GeneratingStatus, SendStopButton, WebSearchButton } from './chat-actions';
+import { ChatTemplates } from '../templates';
 import { ChatEditor } from './chat-editor';
 import { ImageUpload } from './image-upload';
 
@@ -161,6 +162,7 @@ export const ChatInput = ({
                                                 <ChatModeButton />
                                                 {/* <AttachmentButton /> */}
                                                 <WebSearchButton />
+                                                <ChatTemplates />
                                                 {/* <ToolsMenu /> */}
                                                 <ImageUpload
                                                     id="image-attachment"

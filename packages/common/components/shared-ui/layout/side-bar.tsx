@@ -7,6 +7,7 @@ import { useRootContext } from '@repo/common/context';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { Thread } from '@repo/shared/types';
 import {
+    Avatar,
     Badge,
     Button,
     cn,
@@ -15,7 +16,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
     Flex,
+    Tooltip,
 } from '@repo/ui';
+import { FeatureGate } from '../feature-gate';
+import { FeatureName } from '../../../lib/features';
 import {
     IconArrowBarLeft,
     IconArrowBarRight,
@@ -36,6 +40,36 @@ import { motion } from 'framer-motion';
 import moment from 'moment';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
+
+interface SidebarLinkProps {
+    href: string;
+    icon: React.ElementType;
+    label: string;
+    active: boolean;
+}
+
+const SidebarLink = ({ href, icon: Icon, label, active }: SidebarLinkProps) => {
+    const { isSidebarOpen } = useAppStore(state => state);
+    return (
+        <Link href={href} className={isSidebarOpen ? 'w-full' : ''}>
+            <Button
+                size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                variant={active ? 'default' : 'ghost'}
+                rounded="lg"
+                tooltip={isSidebarOpen ? undefined : label}
+                tooltipSide="right"
+                className={cn(
+                    isSidebarOpen && 'relative w-full',
+                    'justify-start',
+                    !isSidebarOpen && 'justify-center'
+                )}
+            >
+                <Icon size={16} strokeWidth={2} />
+                {isSidebarOpen && label}
+            </Button>
+        </Link>
+    );
+};
 
 export const Sidebar = () => {
     const { threadId: currentThreadId } = useParams();
@@ -236,49 +270,17 @@ export const Sidebar = () => {
                     direction="col"
                     gap="xs"
                     className={cn(
-                        'border-hard mt-3 w-full  justify-center border-t border-dashed px-3 py-2',
+                        'border-hard mt-3 w-full justify-center border-t border-dashed px-3 py-2',
                         !isSidebarOpen && 'items-center justify-center px-0'
                     )}
                 >
-                    <Link href="/templates" className={isSidebarOpen ? 'w-full' : ''}>
-                        <Button
-                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            variant="ghost"
-                            rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'Templates'}
-                            tooltipSide="right"
-                            className={cn(isSidebarOpen && 'relative w-full', 'justify-start', !isSidebarOpen && 'justify-center')}
-                        >
-                            <IconTemplate size={16} strokeWidth={2} />
-                            {isSidebarOpen && 'Templates Library'}
-                        </Button>
-                    </Link>
-                    <Link href="/designer" className={isSidebarOpen ? 'w-full' : ''}>
-                        <Button
-                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            variant="ghost"
-                            rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'Designer'}
-                            tooltipSide="right"
-                            className={cn(isSidebarOpen && 'relative w-full', 'justify-start', !isSidebarOpen && 'justify-center')}
-                        >
-                            <IconPencil size={16} strokeWidth={2} />
-                            {isSidebarOpen && 'Template Designer'}
-                        </Button>
-                    </Link>
-                    <Link href="/datasets" className={isSidebarOpen ? 'w-full' : ''}>
-                        <Button
-                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                            variant="ghost"
-                            rounded="lg"
-                            tooltip={isSidebarOpen ? undefined : 'Datasets'}
-                            tooltipSide="right"
-                            className={cn(isSidebarOpen && 'relative w-full', 'justify-start', !isSidebarOpen && 'justify-center')}
-                        >
-                            <IconDatabase size={16} strokeWidth={2} />
-                            {isSidebarOpen && 'Dataset Library'}
-                        </Button>
-                    </Link>
+                    <SidebarLink href="/templates" icon={IconTemplate} label="Templates Library" active={pathname.startsWith('/templates')} />
+
+                    <SidebarLink href="/designer" icon={IconPencil} label="Template Designer" active={pathname.startsWith('/designer')} />
+
+                    <FeatureGate feature={FeatureName.Dataset} action="access" subject={FeatureName.Dataset}>
+                        <SidebarLink href="/datasets" icon={IconDatabase} label="Dataset Library" active={pathname.startsWith('/datasets')} />
+                    </FeatureGate>
                 </Flex>
 
                 {false ? (

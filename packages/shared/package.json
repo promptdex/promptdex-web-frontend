@@ -39,7 +39,7 @@
     "devDependencies": {
         "@types/react": "^19",
         "@types/node": "25",
-        "typescript": "5",
+        "typescript": "5.9.3",
         "eslint": "9.39.2",
         "eslint-config-custom": "*",
         "@repo/typescript-config": "*",

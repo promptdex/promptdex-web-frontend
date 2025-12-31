@@ -1,11 +1,17 @@
 'use client';
 
-import { TemplateListing } from "@repo/common/components";
+import { TemplateListing } from '@repo/common/components';
+import { FeatureGate } from '@repo/common/components';
+import { FeatureName } from '@repo/common/lib';
 
-export default function TemplatesPage() {
+const TemplatesPage = () => {
     return (
-        <div className="flex h-full w-full flex-col items-center overflow-y-auto p-8">
-            <TemplateListing />
-        </div>
+        <FeatureGate feature={FeatureName.Template} action="access" subject={FeatureName.Template} fallback={<div className="p-8 text-center">Feature Disabled or Access Denied</div>}>
+            <div className="flex h-full w-full flex-col">
+                <TemplateListing />
+            </div>
+        </FeatureGate>
     );
-}
+};
+
+export default TemplatesPage;

@@ -13,7 +13,11 @@ import { Category, MOCK_CATEGORIES } from '@repo/common/lib';
 import { DirectoryCard, DirectoryGrid, DirectorySearch } from '@repo/common/components';
 import Link from 'next/link';
 
-export const TemplateListing = () => {
+export const TemplateListing = ({
+    onSelect
+}: {
+    onSelect?: (template: any) => void;
+}) => {
     const editor: Editor | undefined = useChatStore(state => state.editor);
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
@@ -99,7 +103,8 @@ export const TemplateListing = () => {
                             key={index}
                             title={template.title}
                             description={template.description}
-                            href={`/template/${template.id}`}
+                            href={onSelect ? undefined : `/template/${template.id}`}
+                            onClick={onSelect ? () => onSelect(template) : undefined}
                         />
                     ))}
                 </DirectoryGrid>

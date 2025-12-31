@@ -1,11 +1,17 @@
 'use client';
 
 import { DatasetListing } from '@repo/common/components';
+import { FeatureGate } from '@repo/common/components';
+import { FeatureName } from '@repo/common/lib';
 
-export default function DatasetsPage() {
+const DatasetsPage = () => {
     return (
-        <div className="min-h-screen w-full bg-background pt-20">
-            <DatasetListing />
-        </div>
+        <FeatureGate feature={FeatureName.Dataset} action="access" subject={FeatureName.Dataset} fallback={<div className="p-8 text-center">Feature Disabled or Access Denied</div>}>
+            <div className="flex h-full w-full flex-col">
+                <DatasetListing />
+            </div>
+        </FeatureGate>
     );
-}
+};
+
+export default DatasetsPage;

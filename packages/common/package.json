@@ -14,7 +14,8 @@
         "type-check": "tsc --noEmit"
     },
     "dependencies": {
-        "better-auth": "^1.4.9",
+        "@casl/ability": "^6.7.5",
+        "@casl/react": "^5.0.0",
         "@mdx-js/mdx": "^3.1.1",
         "@repo/actions": "*",
         "@repo/ai": "*",
@@ -32,6 +33,7 @@
         "@tiptap/extension-placeholder": "^3.14.0",
         "@tiptap/extension-text": "^3.14.0",
         "@tiptap/react": "^3.14.0",
+        "better-auth": "^1.4.9",
         "dexie": "^4.2.1",
         "fast-xml-parser": "^5.3.3",
         "framer-motion": "^12.23.26",

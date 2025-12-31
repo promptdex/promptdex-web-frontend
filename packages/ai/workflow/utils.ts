@@ -314,8 +314,8 @@ export const getSERPResults = async (queries: string[], gl?: Geo) => {
         const batchResult = await response.json();
 
         const organicResultsLists =
-            batchResult?.map((result: any) => result.organic?.slice(0, 10)) || [];
-        const allOrganicResults = organicResultsLists.flat();
+            (batchResult as any[])?.map((result: any) => result.organic?.slice(0, 10)) || [];
+        const allOrganicResults = organicResultsLists.reduce((acc, val) => acc.concat(val), []);
         const uniqueOrganicResults = allOrganicResults.filter(
             (result: any, index: number, self: any[]) =>
                 index === self.findIndex((r: any) => r?.link === result?.link)

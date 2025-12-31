@@ -5,3 +5,4 @@ export * from './messages';
 export * from './steps';
 export * from './sources';
 export * from './prompts';
+export * from './templates';
