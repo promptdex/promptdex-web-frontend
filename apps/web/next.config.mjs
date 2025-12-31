@@ -1,6 +1,12 @@
 import { withSentryConfig } from '@sentry/nextjs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const nextConfig = {
+    output: 'standalone',
     transpilePackages: ['next-mdx-remote'],
     images: {
         remotePatterns: [
@@ -10,6 +16,7 @@ const nextConfig = {
         ],
     },
 
+    serverExternalPackages: ['@vercel/kv', '@clerk/nextjs'],
     experimental: {
         externalDir: true,
     },
@@ -17,6 +24,7 @@ const nextConfig = {
         if (!options.isServer) {
             config.resolve.fallback = { fs: false, module: false, path: false };
         }
+
         // Experimental features
         config.experiments = {
             ...config.experiments,
@@ -38,6 +46,6 @@ export default withSentryConfig(nextConfig, {
     silent: !process.env.CI,
     widenClientFileUpload: true,
     hideSourceMaps: true,
-    disableLogger: true,
-    automaticVercelMonitors: true,
+    // disableLogger: true, // Removed in favor of webpack.treeshake.removeDebugLogging (set automatically by Sentry wizard or manually if needed, but defaults are usually fine)
+    // automaticVercelMonitors: true, // Removed
 });

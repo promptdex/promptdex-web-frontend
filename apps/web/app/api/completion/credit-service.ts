@@ -1,4 +1,8 @@
-import { kv } from '@vercel/kv';
+// Dynamic import to prevent build-time initialization
+const getKV = async () => {
+    const { kv } = await import('@vercel/kv');
+    return kv;
+};
 
 const DAILY_CREDITS_AUTH = process.env.FREE_CREDITS_LIMIT_REQUESTS_AUTH
     ? parseInt(process.env.FREE_CREDITS_LIMIT_REQUESTS_AUTH)
@@ -71,6 +75,7 @@ async function getRemainingCreditsForUser(userId: string): Promise<number> {
         const lastRefillKey = `${key}:lastRefill`;
         const now = new Date().toISOString().split('T')[0];
 
+        const kv = await getKV();
         return await kv.eval(
             GET_REMAINING_CREDITS_SCRIPT,
             [key, lastRefillKey],
@@ -92,6 +97,7 @@ async function getRemainingCreditsForIp(ip: string): Promise<number> {
         const lastRefillKey = `${key}:lastRefill`;
         const now = new Date().toISOString().split('T')[0];
 
+        const kv = await getKV();
         return await kv.eval(
             GET_REMAINING_CREDITS_SCRIPT,
             [key, lastRefillKey],
@@ -119,6 +125,7 @@ async function deductCreditsFromUser(userId: string, cost: number): Promise<bool
     try {
         const key = `credits:user:${userId}`;
 
+        const kv = await getKV();
         return (await kv.eval(DEDUCT_CREDITS_SCRIPT, [key], [cost.toString()])) === 1;
     } catch (error) {
         console.error('Failed to deduct credits from user:', error);
@@ -130,6 +137,7 @@ async function deductCreditsFromIp(ip: string, cost: number): Promise<boolean> {
     try {
         const key = `credits:ip:${ip}`;
 
+        const kv = await getKV();
         return (await kv.eval(DEDUCT_CREDITS_SCRIPT, [key], [cost.toString()])) === 1;
     } catch (error) {
         console.error('Failed to deduct credits from IP:', error);

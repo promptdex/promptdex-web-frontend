@@ -17,6 +17,7 @@ export * from './form-label';
 export * from './hover-card';
 export * from './input';
 export * from './kbd';
+export * from './link-favicon';
 export * from './label';
 export * from './label-divider';
 export * from './link-block';

@@ -1,14 +1,15 @@
 'use client';
 
-import { getTemplateById } from '@repo/common/lib/mock-templates';
+import { getTemplateById } from '@repo/common/lib';
 import { useChatStore } from '@repo/common/store';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
 import { IconArrowLeft, IconCopy, IconMessage } from '@tabler/icons-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-export default function TemplateSlugPage({ params }: { params: { slug: string } }) {
+export default function TemplateSlugPage() {
+    const params = useParams<{ slug: string }>();
     const template = getTemplateById(params.slug);
     const router = useRouter();
     const setEditor = useChatStore(state => state.setEditor);

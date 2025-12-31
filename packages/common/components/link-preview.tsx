@@ -5,7 +5,7 @@ import { getHost } from '@repo/shared/utils';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@repo/ui';
 import { IconExternalLink } from '@tabler/icons-react';
 import React, { memo, useState } from 'react';
-import { LinkFavicon } from './link-favicon';
+import { LinkFavicon } from '@repo/ui';
 const ogCache = new Map<string, any>();
 
 export type LinkPreviewType = {

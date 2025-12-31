@@ -1,7 +1,12 @@
 {
     "extends": "@repo/typescript-config",
     "compilerOptions": {
-        "baseUrl": "."
+        "baseUrl": ".",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "target": "esnext",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowSyntheticDefaultImports": true
     },
     "include": ["**/*.ts", "**/*.tsx", "**/**/*.ts", "**/**/*.tsx"],
     "exclude": ["node_modules"]

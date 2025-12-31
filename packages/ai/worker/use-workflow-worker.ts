@@ -1,5 +1,6 @@
+'use client';
 import { ChatMode } from '@repo/shared/config';
-import { CoreAssistantMessage, CoreUserMessage } from 'ai';
+import { ModelMessage } from 'ai';
 import { useEffect, useRef, useState } from 'react';
 
 export type WorkflowConfig = {
@@ -117,7 +118,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
         threadItemId: string;
         parentThreadItemId: string;
         customInstructions?: string;
-        messages: (CoreUserMessage | CoreAssistantMessage)[];
+        messages: ModelMessage[];
         config?: WorkflowConfig;
         apiKeys?: Record<string, string>;
         mcpConfig?: Record<string, string>;
@@ -137,13 +138,13 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, onAbort?: () 
                     type: 'module',
                 });
 
-                // Set up message handler
-                workerRef.current.onmessage = event => {
-                    const data = event.data;
-                    if (onMessageRef.current) {
-                        onMessageRef.current(data);
-                    }
-                };
+            // Set up message handler
+            workerRef.current.onmessage = (event: MessageEvent) => {
+                const data = event.data;
+                if (onMessageRef.current) {
+                    onMessageRef.current(data);
+                }
+            };
             }
 
             // Start workflow with existing worker

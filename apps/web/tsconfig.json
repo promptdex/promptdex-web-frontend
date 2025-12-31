@@ -17,6 +17,7 @@
             "@/services/*": ["./lib/services/*"],
             "@/*": ["./*"]
         },
-        "baseUrl": "."
+        "baseUrl": ".",
+        "types": ["node", "react", "react-dom", "jsdom", "lodash", "turndown"]
     }
 }

@@ -1,3 +1,4 @@
+'use client';
 import { useAuth, useUser } from '@clerk/nextjs';
 import { useWorkflowWorker } from '@repo/ai/worker';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
@@ -25,33 +26,21 @@ export type AgentContextType = {
 const AgentContext = createContext<AgentContextType | undefined>(undefined);
 
 export const AgentProvider = ({ children }: { children: ReactNode }) => {
-    const { threadId: currentThreadId } = useParams();
-    const { isSignedIn } = useAuth();
-    const { user } = useUser();
+    const { user, isSignedIn } = useUser();
 
-    const {
-        updateThreadItem,
-        setIsGenerating,
-        setAbortController,
-        createThreadItem,
-        setCurrentThreadItem,
-        setCurrentSources,
-        updateThread,
-        chatMode,
-        fetchRemainingCredits,
-        customInstructions,
-    } = useChatStore(state => ({
-        updateThreadItem: state.updateThreadItem,
-        setIsGenerating: state.setIsGenerating,
-        setAbortController: state.setAbortController,
-        createThreadItem: state.createThreadItem,
-        setCurrentThreadItem: state.setCurrentThreadItem,
-        setCurrentSources: state.setCurrentSources,
-        updateThread: state.updateThread,
-        chatMode: state.chatMode,
-        fetchRemainingCredits: state.fetchRemainingCredits,
-        customInstructions: state.customInstructions,
-    }));
+    // Use individual selectors to avoid getSnapshot caching issues
+    const updateThreadItem = useChatStore(state => state.updateThreadItem);
+    const setIsGenerating = useChatStore(state => state.setIsGenerating);
+    const setAbortController = useChatStore(state => state.setAbortController);
+    const createThreadItem = useChatStore(state => state.createThreadItem);
+    const setCurrentThreadItem = useChatStore(state => state.setCurrentThreadItem);
+    const setCurrentSources = useChatStore(state => state.setCurrentSources);
+    const updateThread = useChatStore(state => state.updateThread);
+    const chatMode = useChatStore(state => state.chatMode);
+    const currentThreadId = useChatStore(state => state.currentThreadId);
+    const fetchRemainingCredits = useChatStore(state => state.fetchRemainingCredits);
+    const customInstructions = useChatStore(state => state.customInstructions);
+
     const { push } = useRouter();
 
     const getSelectedMCP = useMcpToolsStore(state => state.getSelectedMCP);
@@ -110,11 +99,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 updatedAt: new Date(),
                 ...(eventType === 'answer'
                     ? {
-                          answer: {
-                              ...eventData.answer,
-                              text: (prevItem.answer?.text || '') + eventData.answer.text,
-                          },
-                      }
+                        answer: {
+                            ...eventData.answer,
+                            text: (prevItem.answer?.text || '') + eventData.answer.text,
+                        },
+                    }
                     : { [eventType]: eventData[eventType] }),
             };
 

@@ -1,3 +1,4 @@
+'use client';
 import { DisableEnter, ShiftEnterToLineBreak } from '@repo/shared/utils';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Document } from '@tiptap/extension-document';
@@ -55,18 +56,20 @@ export const useChatEditor = (editorProps: {
                 });
 
                 if (newHTML !== html) {
-                    editor.commands.setContent(newHTML, true, {
+                    editor.commands.setContent(newHTML, {
+                        emitUpdate: true,
                         preserveWhitespace: true,
-                    });
+                    } as any);
                 }
                 // setOpenPromptsBotCombo(false);
             }
         },
         onCreate(props) {
             if (editorProps?.defaultContent) {
-                props.editor.commands.setContent(editorProps?.defaultContent || '', true, {
+                props.editor.commands.setContent(editorProps?.defaultContent || '', {
+                    emitUpdate: true,
                     preserveWhitespace: true,
-                });
+                } as any);
             }
             if (editorProps?.onInit) {
                 editorProps.onInit({ editor: props.editor });

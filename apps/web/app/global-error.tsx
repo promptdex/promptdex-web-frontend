@@ -1,10 +1,15 @@
 'use client';
 
 import * as Sentry from '@sentry/nextjs';
-import Error from 'next/error';
 import { useEffect } from 'react';
 
-export default function GlobalError({ error }: { error: Error }) {
+export default function GlobalError({
+    error,
+    reset,
+}: {
+    error: Error & { digest?: string };
+    reset: () => void;
+}) {
     useEffect(() => {
         if (process.env.NODE_ENV === 'production') {
             Sentry.captureException(error);
@@ -22,6 +27,12 @@ export default function GlobalError({ error }: { error: Error }) {
                             page or check back later. If the problem persists, feel free to{' '}
                             <a href="mailto:hello@llmchat.com">contact team</a>.
                         </p>
+                        <button
+                            onClick={() => reset()}
+                            className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                        >
+                            Try again
+                        </button>
                     </div>
                 </div>
             </body>

@@ -43,7 +43,7 @@ const DotTransition = {
     duration: 1.5,
     repeat: Infinity,
     ease: 'easeInOut',
-};
+} as const;
 
 export function Spinner() {
     return (

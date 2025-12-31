@@ -33,3 +33,5 @@ if (!isDevelopment) {
     ],
   });
 }
+
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

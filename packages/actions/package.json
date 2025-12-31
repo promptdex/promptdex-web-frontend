@@ -7,11 +7,14 @@
         ".": "./index.ts"
     },
     "dependencies": {
-        "@repo/prisma": "workspace:*"
+        "@clerk/nextjs": "^6.36.5",
+        "@repo/prisma": "workspace:*",
+        "langfuse": "^3.38.6",
+        "openai": "^6.15.0"
     },
     "devDependencies": {
         "@repo/typescript-config": "*",
-        "eslint": "^8.56.0",
-        "typescript": "^5.3.3"
+        "eslint": "^9.39.2",
+        "typescript": "^5.9.3"
     }
 }

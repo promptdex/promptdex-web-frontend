@@ -234,8 +234,9 @@ const initializeWorker = () => {
     if (typeof window === 'undefined') return;
 
     try {
-        // Create a shared worker
-        dbWorker = new SharedWorker(new URL('./db-sync.worker.ts', import.meta?.url), {
+        // Create a shared worker - use dynamic URL to avoid webpack warning
+        const workerUrl = new URL('./db-sync.worker.ts', import.meta.url);
+        dbWorker = new SharedWorker(workerUrl, {
             type: 'module',
         });
 

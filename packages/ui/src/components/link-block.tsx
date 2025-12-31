@@ -1,6 +1,6 @@
 'use client';
 
-import { LinkFavicon } from '@repo/common/components';
+import { LinkFavicon } from './link-favicon';
 import { Source } from '@repo/shared/types';
 import { getHost } from '@repo/shared/utils';
 import React, { memo } from 'react';

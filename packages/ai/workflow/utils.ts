@@ -1,7 +1,7 @@
 import { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
 import { Geo } from '@vercel/functions';
 import {
-    CoreMessage,
+    ModelMessage,
     extractReasoningMiddleware,
     generateObject as generateObjectAi,
     streamText,
@@ -75,7 +75,7 @@ export const generateText = async ({
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     onReasoning?: (chunk: string, fullText: string) => void;
     tools?: ToolSet;
     onToolCall?: (toolCall: any) => void;
@@ -101,7 +101,7 @@ export const generateText = async ({
                   model: selectedModel,
                   messages,
                   tools,
-                  maxSteps,
+                  // maxSteps,
                   toolChoice: toolChoice as any,
                   abortSignal: signal,
               })
@@ -109,7 +109,7 @@ export const generateText = async ({
                   prompt,
                   model: selectedModel,
                   tools,
-                  maxSteps,
+                  // maxSteps,
                   toolChoice: toolChoice as any,
                   abortSignal: signal,
               });
@@ -122,12 +122,12 @@ export const generateText = async ({
             }
 
             if (chunk.type === 'text-delta') {
-                fullText += chunk.textDelta;
-                onChunk?.(chunk.textDelta, fullText);
+                fullText += chunk.text;
+                onChunk?.(chunk.text, fullText);
             }
-            if (chunk.type === 'reasoning') {
-                reasoning += chunk.textDelta;
-                onReasoning?.(chunk.textDelta, reasoning);
+            if (chunk.type === 'reasoning-delta') {
+                reasoning += chunk.text;
+                onReasoning?.(chunk.text, reasoning);
             }
             if (chunk.type === 'tool-call') {
                 onToolCall?.(chunk);
@@ -158,7 +158,7 @@ export const generateObject = async ({
     prompt: string;
     model: ModelEnum;
     schema: ZodSchema;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     signal?: AbortSignal;
 }) => {
     try {

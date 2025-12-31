@@ -6,7 +6,7 @@ import {
 } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
 import { Geo } from '@vercel/functions';
-import { CoreMessage } from 'ai';
+import { ModelMessage } from 'ai';
 import { Langfuse } from 'langfuse';
 import {
     analysisTask,
@@ -71,7 +71,7 @@ export type WorkflowContextSchema = {
     mcpConfig: Record<string, string>;
     question: string;
     search_queries: string[];
-    messages: CoreMessage[];
+    messages: ModelMessage[];
     mode: ChatMode;
     goals: {
         id: number;
@@ -126,7 +126,7 @@ export const runWorkflow = ({
     question: string;
     threadId: string;
     threadItemId: string;
-    messages: CoreMessage[];
+    messages: ModelMessage[];
     config?: WorkflowConfig;
     signal?: AbortSignal;
     webSearch?: boolean;

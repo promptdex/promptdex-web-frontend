@@ -7,7 +7,6 @@ import {
     Sidebar,
 } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
-import { AgentProvider } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { plausible } from '@repo/shared/utils';
 import { Badge, Button, Flex, Toaster } from '@repo/ui';
@@ -67,21 +66,19 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             {/* Main Content */}
             <Flex className="flex-1 overflow-hidden">
                 <motion.div className="flex w-full py-1 pr-1">
-                    <AgentProvider>
-                        <div className={containerClass}>
-                            <div className="relative flex h-full w-0 flex-1 flex-row">
-                                <div className="flex w-full flex-col gap-2 overflow-y-auto">
-                                    <div className="from-secondary to-secondary/0 via-secondary/70 absolute left-0 right-0 top-0 z-40 flex flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12"></div>
-                                    {/* Auth Button Header */}
+                    <div className={containerClass}>
+                        <div className="relative flex h-full w-0 flex-1 flex-row">
+                            <div className="flex w-full flex-col gap-2 overflow-y-auto">
+                                <div className="from-secondary to-secondary/0 via-secondary/70 absolute left-0 right-0 top-0 z-40 flex flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12"></div>
+                                {/* Auth Button Header */}
 
-                                    {children}
-                                </div>
+                                {children}
                             </div>
-                            <SideDrawer />
-                            <FeedbackWidget />
-                            <IntroDialog />
                         </div>
-                    </AgentProvider>
+                        <SideDrawer />
+                        <FeedbackWidget />
+                        <IntroDialog />
+                    </div>
                 </motion.div>
                 <SettingsModal />
                 <CommandSearch />
@@ -113,7 +110,7 @@ export const SideDrawer = () => {
                         type: 'spring',
                         stiffness: 300,
                         damping: 30,
-                        exit: { duration: 0.2 },
+                        // exit: { duration: 0.2 },
                     }}
                     className="flex min-h-[99dvh] w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5"
                 >

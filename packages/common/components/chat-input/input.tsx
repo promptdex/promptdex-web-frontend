@@ -39,7 +39,7 @@ export const ChatInput = ({
             if (typeof window !== 'undefined' && !isFollowUp && !isSignedIn) {
                 const draftMessage = window.localStorage.getItem('draft-message');
                 if (draftMessage) {
-                    editor.commands.setContent(draftMessage, true, { preserveWhitespace: true });
+                    editor.commands.setContent(draftMessage, { emitUpdate: true, preserveWhitespace: true } as any);
                 }
             }
         },

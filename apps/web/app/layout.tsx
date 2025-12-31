@@ -1,12 +1,11 @@
 import { ClerkProvider } from '@clerk/nextjs';
-import { RootLayout } from '@repo/common/components';
-import { ReactQueryProvider, RootProvider } from '@repo/common/context';
-import { TooltipProvider, cn } from '@repo/ui';
+import { cn } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
 import { Metadata } from 'next';
 import { Bricolage_Grotesque } from 'next/font/google';
 import localFont from 'next/font/local';
+import { ClientProviders } from './client-providers';
 
 const bricolage = Bricolage_Grotesque({
     subsets: ['latin'],
@@ -14,6 +13,9 @@ const bricolage = Bricolage_Grotesque({
 });
 
 import './globals.css';
+
+// Force dynamic rendering to prevent useContext errors during static generation
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: 'llmchat.co - Go Deeper with AI-Powered Research & Agentic Workflows',
@@ -23,6 +25,7 @@ export const metadata: Metadata = {
     authors: [{ name: 'Trendy design', url: 'https://trendy.design' }],
     creator: 'Trendy design',
     publisher: 'Trendy design',
+    metadataBase: new URL('https://llmchat.co'),
     openGraph: {
         title: 'llmchat.co - Go Deeper with AI-Powered Research & Agentic Workflows',
         siteName: 'llmchat.co',
@@ -88,39 +91,19 @@ export default function ParentLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html
-            lang="en"
-            className={cn(GeistMono.variable, inter.variable, clash.variable, bricolage.variable)}
-            suppressHydrationWarning
-        >
-            <head>
-                <link rel="icon" href="/favicon.ico" sizes="any" />
-
-                {/* <script
-                    crossOrigin="anonymous"
-                    src="//unpkg.com/react-scan/dist/auto.global.js"
-                ></script> */}
-            </head>
-            <body>
-                {/* <PostHogProvider> */}
-                <ClerkProvider>
-                    <RootProvider>
-                        {/* <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          > */}
-                        <TooltipProvider>
-                            <ReactQueryProvider>
-                                <RootLayout>{children}</RootLayout>
-                            </ReactQueryProvider>
-                        </TooltipProvider>
-                        {/* </ThemeProvider> */}
-                    </RootProvider>
-                </ClerkProvider>
-                {/* </PostHogProvider> */}
-            </body>
-        </html>
+        <ClerkProvider>
+            <html
+                lang="en"
+                className={cn(GeistMono.variable, inter.variable, clash.variable, bricolage.variable)}
+                suppressHydrationWarning
+            >
+                <head>
+                    <link rel="icon" href="/favicon.ico" sizes="any" />
+                </head>
+                <body>
+                    <ClientProviders>{children}</ClientProviders>
+                </body>
+            </html>
+        </ClerkProvider>
     );
 }

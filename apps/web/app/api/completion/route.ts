@@ -12,6 +12,8 @@ import { executeStream, sendMessage } from './stream-handlers';
 import { completionRequestSchema, SSE_HEADERS } from './types';
 import { getIp } from './utils';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
     if (request.method === 'OPTIONS') {
         return new Response(null, { headers: SSE_HEADERS });

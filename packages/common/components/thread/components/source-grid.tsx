@@ -1,4 +1,5 @@
-import { LinkFavicon, SourceList } from '@repo/common/components';
+import { LinkFavicon, cn } from '@repo/ui';
+import { SourceList } from '@repo/common/components';
 import { useAppStore } from '@repo/common/store';
 import { Source } from '@repo/shared/types';
 import { getHost } from '@repo/shared/utils';
