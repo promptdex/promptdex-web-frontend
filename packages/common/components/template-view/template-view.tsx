@@ -2,7 +2,7 @@
 
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Separator, cn } from '@repo/ui';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-import { ViewHeader } from '../shared-ui/view-header';
+import { ViewHeader } from '@repo/common/components';
 
 // Placeholder for now, replace with actual data fetching
 const MOCK_TEMPLATE = {

@@ -1,8 +1,8 @@
 'use client';
-import { useAuth } from '../../../hooks/use-auth';
+import { useAuth } from '@repo/common/hooks';
 import { ImageAttachment } from './image-attachment';
 import { ImageDropzoneRoot } from './image-dropzone-root';
-import { MessagesRemainingBadge } from '../../auth-view/messages-remaining-badge';
+import { MessagesRemainingBadge } from '@repo/common/components';
 import { DotSpinner } from '../steps/step-status';
 import { ChatModeConfig } from '@repo/shared/config';
 import { cn, Flex, Button } from '@repo/ui';

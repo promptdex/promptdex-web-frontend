@@ -11,7 +11,7 @@ import { Text } from '@tiptap/extension-text';
 import { Editor, useEditor } from '@tiptap/react';
 import { useEffect, useState } from 'react';
 import { useChatStore } from '../store';
-import { VariableExtension } from '../components/chat-input/variable-extension';
+import { VariableExtension } from '../components/chat-view/chat-input/variable-extension';
 
 export const useChatEditor = (editorProps: {
     placeholder?: string;

@@ -9,11 +9,11 @@ import { Badge, Dialog, DialogContent, Input } from '@repo/ui';
 import { useChatEditor } from '@repo/common/hooks';
 import moment from 'moment';
 import { useState } from 'react';
-import { ApiKeys, useApiKeysStore } from '../store/api-keys.store';
-import { SETTING_TABS, useAppStore } from '../store/app.store';
-import { useChatStore } from '../store/chat.store';
-import { ChatEditor } from './chat-input';
-import { BYOKIcon, ToolIcon } from './icons';
+import { ApiKeys, useApiKeysStore } from '@repo/common/store';
+import { SETTING_TABS, useAppStore } from '@repo/common/store';
+import { useChatStore } from '@repo/common/store';
+import { ChatEditor } from '@repo/common/components';
+import { BYOKIcon, ToolIcon } from '../graphics/icons';
 
 export const SettingsModal = () => {
     const isSettingOpen = useAppStore(state => state.isSettingsOpen);

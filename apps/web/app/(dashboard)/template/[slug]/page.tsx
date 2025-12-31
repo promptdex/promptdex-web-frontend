@@ -1,5 +1,6 @@
 import { TemplateView } from '@repo/common/components';
 
-export default function TemplateViewPage({ params }: { params: { slug: string } }) {
-    return <TemplateView id={params.slug} />;
+export default async function TemplateViewPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    return <TemplateView id={slug} />;
 }

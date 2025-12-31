@@ -5,7 +5,7 @@ import { IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
-import { signIn, authClient } from '../../hooks/use-auth';
+import { signIn, authClient } from '@repo/common/hooks';
 
 type CustomSignInProps = {
     redirectUrl?: string;

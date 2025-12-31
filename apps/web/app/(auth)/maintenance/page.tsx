@@ -1,4 +1,4 @@
-import { MaintenanceView } from '@/components/maintenance-view';
+import { MaintenanceView } from '@repo/common/components';
 import { redirect } from 'next/navigation';
 
 export default function MaintenancePage() {

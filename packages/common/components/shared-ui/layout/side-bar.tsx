@@ -1,8 +1,8 @@
 'use client';
-import { useUser, useAuth, signOut } from '../hooks/use-auth';
-import { FullPageLoader } from './full-page-loader';
-import { HistoryItem } from './history-item';
-import { Logo } from './logo';
+import { useUser, useAuth, signOut } from '@repo/common/hooks';
+import { FullPageLoader } from '../feedback/full-page-loader';
+import { HistoryItem } from '../display/history-item';
+import { Logo } from '../graphics/logo';
 import { useRootContext } from '@repo/common/context';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { Thread } from '@repo/shared/types';
@@ -30,6 +30,7 @@ import {
     IconTemplate,
     IconPencil,
     IconUser,
+    IconDatabase,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 import moment from 'moment';
@@ -263,6 +264,19 @@ export const Sidebar = () => {
                         >
                             <IconPencil size={16} strokeWidth={2} />
                             {isSidebarOpen && 'Template Designer'}
+                        </Button>
+                    </Link>
+                    <Link href="/datasets" className={isSidebarOpen ? 'w-full' : ''}>
+                        <Button
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant="ghost"
+                            rounded="lg"
+                            tooltip={isSidebarOpen ? undefined : 'Datasets'}
+                            tooltipSide="right"
+                            className={cn(isSidebarOpen && 'relative w-full', 'justify-start', !isSidebarOpen && 'justify-center')}
+                        >
+                            <IconDatabase size={16} strokeWidth={2} />
+                            {isSidebarOpen && 'Dataset Library'}
                         </Button>
                     </Link>
                 </Flex>

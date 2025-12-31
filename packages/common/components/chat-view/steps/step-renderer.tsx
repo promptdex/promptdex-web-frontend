@@ -1,4 +1,4 @@
-import { SearchResultsList, TextShimmer } from '../../shared-ui';
+import { SearchResultsList, TextShimmer } from '@repo/common/components';
 import { StepStatus } from './step-status';
 import { Step } from '@repo/shared/types';
 import { Badge } from '@repo/ui';

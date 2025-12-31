@@ -2,7 +2,7 @@ import { CitationProvider, SourceGrid } from '../sources';
 import { FollowupSuggestions, QuestionPrompt } from '../prompts';
 import { MarkdownContent, Message, MessageActions } from '../messages';
 import { Steps } from '../steps';
-import { MotionSkeleton } from '../../shared-ui';
+import { MotionSkeleton } from '@repo/common/components';
 import { useAnimatedText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { ThreadItem as ThreadItemType } from '@repo/shared/types';

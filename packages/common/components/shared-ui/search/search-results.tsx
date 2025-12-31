@@ -1,5 +1,5 @@
 'use client';
-import { LinkPreviewPopover } from './link-preview';
+import { LinkPreviewPopover } from '@repo/common/components';
 import { Source } from '@repo/shared/types';
 import { getHost, getHostname } from '@repo/shared/utils';
 import { Badge, Flex, LinkFavicon, cn } from '@repo/ui';

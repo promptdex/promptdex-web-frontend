@@ -1,12 +1,12 @@
 'use client';
 
-import { useUser } from '../../hooks/use-auth';
+import { useUser } from '@repo/common/hooks';
 import { Button, Dialog, DialogContent, cn } from '@repo/ui';
 import { IconArrowRight, IconCheck, IconCircleCheckFilled } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Logo } from '../shared-ui/logo';
+import { Logo } from '@repo/common/components';
 export const IntroDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { isSignedIn } = useUser();

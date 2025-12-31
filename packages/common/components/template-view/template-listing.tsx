@@ -9,8 +9,8 @@ import {
 import { Editor } from '@tiptap/react';
 import { useState } from 'react';
 
-import { Category, MOCK_CATEGORIES } from '../../lib/mock-templates';
-import { DirectoryCard, DirectoryGrid, DirectorySearch } from '../shared-ui/directory';
+import { Category, MOCK_CATEGORIES } from '@repo/common/lib';
+import { DirectoryCard, DirectoryGrid, DirectorySearch } from '@repo/common/components';
 import Link from 'next/link';
 
 export const TemplateListing = () => {

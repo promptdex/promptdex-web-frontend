@@ -1,6 +1,6 @@
-import { CitationProviderContext } from '../../chat-view/sources/citation-provider';
+import { CitationProviderContext } from '@repo/common/components';
 import { CodeBlock } from '../code-block/code-block';
-import { LinkPreviewPopover } from '../link-preview';
+import { LinkPreviewPopover } from '../display/link-preview';
 import { isValidUrl } from '@repo/shared/utils';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { ComponentProps, ReactElement, useContext } from 'react';

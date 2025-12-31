@@ -14,10 +14,10 @@ import {
 
 import { IconCheck, IconTools } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
-import { useApiKeysStore } from '../store/api-keys.store';
-import { SETTING_TABS, useAppStore } from '../store/app.store';
-import { useChatStore } from '../store/chat.store';
-import { ToolIcon } from './icons';
+import { useApiKeysStore } from '@repo/common/store';
+import { SETTING_TABS, useAppStore } from '@repo/common/store';
+import { useChatStore } from '@repo/common/store';
+import { ToolIcon } from '../graphics/icons';
 
 export const ToolsMenu = () => {
     const [isOpen, setIsOpen] = useState(false);

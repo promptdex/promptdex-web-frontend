@@ -1,5 +1,6 @@
 import { DatasetView } from '@repo/common/components';
 
-export default function DatasetSlugPage({ params }: { params: { slug: string } }) {
-    return <DatasetView slug={params.slug} />;
+export default async function DatasetSlugPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    return <DatasetView slug={slug} />;
 }

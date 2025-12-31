@@ -1,15 +1,12 @@
 'use client';
-import { DirectoryCard, DirectoryGrid, DirectorySearch } from '../shared-ui/directory';
+import { MOCK_DATASETS } from '@repo/common/lib';
+import { DirectoryCard, DirectoryGrid, DirectorySearch } from '@repo/common/components';
+import Link from 'next/link';
 import { useState } from 'react';
 
-const mockDatasets = [
-    { title: "Legal Documents 2024", description: "Comprehensive collection of Brazilian civil law documents and precedents.", slug: "legal-docs-2024" },
-    { title: "Financial Reports Q3", description: "Consolidated quarterly reports from top S&P 500 companies.", slug: "financial-reports-q3" },
-    { title: "Academic Papers: AI", description: "State-of-the-art research papers in deep learning and NLP.", slug: "academic-papers-ai" },
-];
 
 export const DatasetListing = () => {
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState<string>("");
 
     return (
         <div className="flex flex-col gap-12 w-full max-w-7xl mx-auto px-6 py-12">
@@ -24,12 +21,12 @@ export const DatasetListing = () => {
             </div>
 
             <DirectoryGrid>
-                {mockDatasets.map((dataset) => (
+                {MOCK_DATASETS.map((dataset) => (
                     <DirectoryCard
-                        key={dataset.slug}
-                        title={dataset.title}
+                        key={dataset.id}
+                        title={dataset.name}
                         description={dataset.description}
-                        href={`/dataset/${dataset.slug}`}
+                        href={`/dataset/${dataset.id}`}
                     />
                 ))}
             </DirectoryGrid>

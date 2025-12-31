@@ -1,10 +1,9 @@
 'use client';
 
-import { ErrorBoundary } from '../../feedback-view/error-boundary';
-import { ErrorPlaceholder } from '../../feedback-view/error-placeholder';
-import { mdxComponents } from '../../shared-ui/mdx/mdx-components';
-import { useMdxChunker } from '../../shared-ui/mdx/use-mdx-chunks';
-import { ChatModeOptions } from '../chat-input/chat-actions';
+import { ErrorBoundary } from '@repo/common/components';
+import { ErrorPlaceholder } from '@repo/common/components';
+import { mdxComponents } from '@repo/common/components';
+import { useMdxChunker } from '@repo/common/components'; // Assuming this is exported or handled
 import { cn } from '@repo/ui';
 import { MDXRemote } from 'next-mdx-remote';
 import { MDXRemoteSerializeResult } from 'next-mdx-remote/rsc';

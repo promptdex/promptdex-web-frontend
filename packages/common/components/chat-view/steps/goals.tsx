@@ -1,4 +1,4 @@
-import { CodeBlock, ToolIcon } from '../../shared-ui';
+import { CodeBlock, ToolIcon } from '@repo/common/components';
 import { StepRenderer } from './step-renderer';
 import { StepStatus } from './step-status';
 import { ToolCallStep } from './tool-call';
