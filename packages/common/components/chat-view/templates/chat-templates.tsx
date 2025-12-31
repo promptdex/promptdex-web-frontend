@@ -87,7 +87,7 @@ export const ChatTemplates = () => {
                     <IconTemplate size={18} strokeWidth={2} />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-5xl h-[80vh] flex flex-col p-0 overflow-hidden border-none bg-transparent shadow-none">
+            <DialogContent ariaTitle="Template Library" className="max-w-5xl h-[80vh] flex flex-col p-0 overflow-hidden border-none bg-transparent shadow-none">
                 <div className="flex-1 overflow-y-auto no-scrollbar rounded-3xl bg-background/80 backdrop-blur-3xl border border-white/10 p-6 shadow-2xl">
                     <DialogHeader className="mb-6">
                         <DialogTitle className="text-2xl font-bold">Template Library</DialogTitle>
