@@ -1,8 +1,8 @@
 'use client';
 
+import { MaintenanceView } from '@repo/common/components';
 import * as Sentry from '@sentry/nextjs';
 import { useEffect } from 'react';
-import { MaintenanceView } from '@/components/maintenance-view';
 
 export default function GlobalError({
     error,

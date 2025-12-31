@@ -252,7 +252,6 @@
         "@tiptap/extension-placeholder": "^3.14.0",
         "@tiptap/extension-text": "^3.14.0",
         "@tiptap/react": "^3.14.0",
-        "@tiptap/starter-kit": "^3.14.0",
         "better-auth": "^1.4.9",
         "dexie": "^4.2.1",
         "fast-xml-parser": "^5.3.3",

@@ -27,6 +27,7 @@ export * from './radio-group';
 export * from './sheet';
 export * from './skeleton';
 export * from './slider';
+export * from './separator';
 export * from './stagger-container';
 export * from './switch';
 export * from './tabs';

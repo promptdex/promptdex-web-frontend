@@ -44,10 +44,10 @@ const ChatSessionPage = () => {
 
     return (
         <div
-            className="no-scrollbar flex w-full flex-1 flex-col items-center overflow-y-auto px-8"
+            className="no-scrollbar flex w-full flex-1 flex-col items-center overflow-y-auto"
             ref={shouldScroll ? scrollRef : undefined}
         >
-            <div className="mx-auto w-full max-w-3xl px-4 pb-[200px] pt-2" ref={contentRef}>
+            <div className="mx-auto w-full max-w-4xl px-6 pb-[240px] pt-12" ref={contentRef}>
                 <Thread />
             </div>
 
