@@ -1,7 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { emailOTP } from 'better-auth/plugins';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { prisma } from '@repo/prisma';
+import { prisma } from './client';
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -9,6 +9,7 @@ export const auth = betterAuth({
     }),
     emailAndPassword: {
         enabled: true,
+        requireEmailVerification: false, // Set to true in production
     },
     socialProviders: {
         google: {
@@ -33,7 +34,7 @@ export const auth = betterAuth({
     ],
     plugins: [
         emailOTP({
-            async sendVerificationOTP({ email, otp, type }) {
+            async sendVerificationOTP({ email, otp, type }: { email: string; otp: string; type: "sign-in" | "email-verification" | "forget-password" }) {
                 console.log(`Sending ${type} OTP to ${email}: ${otp}`);
                 // TODO: Implement actual email sending using Resend or similar
             },

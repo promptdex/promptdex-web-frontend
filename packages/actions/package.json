@@ -7,7 +7,6 @@
         ".": "./index.ts"
     },
     "dependencies": {
-        "@repo/common": "workspace:*",
         "@repo/prisma": "workspace:*",
         "langfuse": "^3.38.6",
         "next": "^15.5.9",

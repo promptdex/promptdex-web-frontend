@@ -1,2 +1,2 @@
 export * from "./mock-templates";
-export * from "./auth";
+export * from "@repo/prisma/auth";

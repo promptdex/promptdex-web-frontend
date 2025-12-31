@@ -1,5 +1,5 @@
 'use server';
-import { auth } from '@repo/common/lib';
+import { auth } from '@repo/prisma/auth';
 import { headers } from 'next/headers';
 
 export const submitFeedback = async (feedback: string) => {
