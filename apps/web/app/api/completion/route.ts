@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@repo/common/lib';
 import { CHAT_MODE_CREDIT_COSTS, ChatModeConfig } from '@repo/shared/config';
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';

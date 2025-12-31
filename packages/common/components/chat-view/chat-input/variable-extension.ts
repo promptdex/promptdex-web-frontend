@@ -1,6 +1,7 @@
 import { mergeAttributes, Node, nodeInputRule, nodePasteRule } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { VariableNodeView } from './variable-node-view';
+import { parseVariableContent, serializeVariable, VariableAttributes } from './lib';
 
 declare module '@tiptap/core' {
     interface Commands<ReturnType> {
@@ -9,9 +10,6 @@ declare module '@tiptap/core' {
         };
     }
 }
-
-// Regex to match [Topic] or [Any Label]
-export const variableRegex = /\[(.*?)\]/g;
 
 export const VariableExtension = Node.create({
     name: 'variable',
@@ -26,27 +24,19 @@ export const VariableExtension = Node.create({
 
     addAttributes() {
         return {
-            label: {
-                default: 'variable',
-            },
-            value: {
-                default: '',
-            },
-            type: {
-                default: 'text', // text, textarea, select
-            },
-            options: {
-                default: [], // for select
-            },
+            label: { default: 'variable' },
+            value: { default: '' },
+            type: { default: 'text' },
+            options: { default: [] },
+            datasetId: { default: undefined },
+            min: { default: 0 },
+            max: { default: 100 },
+            step: { default: 1 },
         };
     },
 
     parseHTML() {
-        return [
-            {
-                tag: 'span[data-type="variable"]',
-            },
-        ];
+        return [{ tag: 'span[data-type="variable"]' }];
     },
 
     renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
@@ -54,10 +44,7 @@ export const VariableExtension = Node.create({
     },
 
     renderText({ node }) {
-        if (node.attrs.value) return node.attrs.value;
-        const typeSuffix = node.attrs.type !== 'text' ? `:${node.attrs.type}` : '';
-        // Serialization doesn't support options well in this simple format, but simple type is fine.
-        return `[${node.attrs.label}${typeSuffix}]`;
+        return serializeVariable(node.attrs as VariableAttributes);
     },
 
     addNodeView() {
@@ -82,16 +69,7 @@ export const VariableExtension = Node.create({
             nodeInputRule({
                 find: /\[(.*?)\]$/,
                 type: this.type,
-                getAttributes: match => {
-                    // Match content inside brackets: "Label" or "Label:type" or "Label:type:opt1,opt2"
-                    const content = match[1];
-                    const parts = content.split(':');
-                    const label = parts[0];
-                    const type = parts[1] || 'text';
-                    const options = parts[2] ? parts[2].split(',') : [];
-
-                    return { label, type, options };
-                },
+                getAttributes: match => parseVariableContent(match[1]),
             }),
         ];
     },
@@ -101,15 +79,7 @@ export const VariableExtension = Node.create({
             nodePasteRule({
                 find: /\[(.*?)\]/g,
                 type: this.type,
-                getAttributes: match => {
-                    const content = match[1];
-                    const parts = content.split(':');
-                    const label = parts[0];
-                    const type = parts[1] || 'text';
-                    const options = parts[2] ? parts[2].split(',') : [];
-                    
-                    return { label, type, options };
-                },
+                getAttributes: match => parseVariableContent(match[1]),
             }),
         ];
     },

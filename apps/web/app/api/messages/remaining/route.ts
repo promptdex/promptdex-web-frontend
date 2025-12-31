@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@repo/common/lib';
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import {

@@ -1,4 +1,4 @@
-import { getCredits, deductCreditsKV, type CloudflareEnv } from '@/lib/cloudflare-kv';
+import { getCredits, deductCreditsKV, type CloudflareEnv } from '@repo/common/lib';
 
 export const DAILY_CREDITS_AUTH = process.env.FREE_CREDITS_LIMIT_REQUESTS_AUTH
     ? parseInt(process.env.FREE_CREDITS_LIMIT_REQUESTS_AUTH)

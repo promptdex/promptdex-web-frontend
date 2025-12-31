@@ -14,6 +14,3 @@ export const {
     useSession,
     getSession,
 } = authClient;
-
-// Types
-export type { Session } from 'better-auth/types';

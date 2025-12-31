@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@repo/common/lib';
 import { prisma } from '@repo/prisma';
 import { geolocation } from '@vercel/functions';
 import { headers } from 'next/headers';
