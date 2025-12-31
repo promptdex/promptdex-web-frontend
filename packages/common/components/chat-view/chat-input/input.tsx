@@ -12,11 +12,11 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useShallow } from 'zustand/react/shallow';
-import { useImageAttachment } from '../../../hooks/use-image-attachment';
-import { useAgentStream } from '../../../hooks/agent-provider';
-import { useChatEditor } from '../../../hooks/use-editor';
-import { useChatStore } from '../../../store';
-import { TemplateLibrary } from '../../directory-view/template-library';
+import { useImageAttachment } from '@repo/common/hooks';
+import { useAgentStream } from '@repo/common/hooks';
+import { useChatEditor } from '@repo/common/hooks';
+import { useChatStore } from '@repo/common/store';
+import { TemplateListing } from '@repo/common/components';
 import { ChatModeButton, GeneratingStatus, SendStopButton, WebSearchButton } from './chat-actions';
 import { ChatEditor } from './chat-editor';
 import { ImageUpload } from './image-upload';
@@ -255,7 +255,7 @@ export const ChatInput = ({
                             transition={{ duration: 0.3, delay: 0.1 }}
                             className="mb-12 w-full"
                         >
-                            <TemplateLibrary />
+                            <TemplateListing />
                         </motion.div>
                     )}
 

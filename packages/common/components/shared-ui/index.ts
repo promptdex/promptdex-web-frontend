@@ -14,3 +14,4 @@ export * from './side-bar';
 export * from './tools-menu';
 export * from './layout/root';
 export * from './directory';
+export * from './view-header';

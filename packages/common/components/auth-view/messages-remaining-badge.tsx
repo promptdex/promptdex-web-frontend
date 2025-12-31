@@ -1,4 +1,4 @@
-import { useUser } from '../hooks/use-auth';
+import { useUser } from '@repo/common/hooks';
 import { useApiKeysStore, useAppStore, useChatStore } from '@repo/common/store';
 import { motion } from 'framer-motion';
 

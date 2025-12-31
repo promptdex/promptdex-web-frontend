@@ -1,8 +1,8 @@
 'use client';
 
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Separator } from '@repo/ui';
-import { IconArrowLeft, IconEdit, IconTrash, IconFileText, IconDatabase } from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
+import { IconEdit, IconTrash, IconFileText, IconDatabase } from '@tabler/icons-react';
+import { ViewHeader } from '../shared-ui/view-header';
 
 // Placeholder mock data
 const MOCK_DATASET = {
@@ -17,30 +17,19 @@ const MOCK_DATASET = {
 };
 
 export const DatasetView = ({ slug }: { slug: string }) => {
-    const router = useRouter();
 
     return (
         <div className="w-full max-w-6xl mx-auto p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex items-center justify-between">
-                <Button
-                    variant="ghost"
-                    onClick={() => router.back()}
-                    className="gap-2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                    <IconArrowLeft size={18} />
-                    Back to Library
+            <ViewHeader backLabel="Back to Library">
+                <Button variant="outlined" size="sm" className="gap-2">
+                    <IconEdit size={16} />
+                    Edit Dataset
                 </Button>
-                <div className="flex gap-2">
-                    <Button variant="outlined" size="sm" className="gap-2">
-                        <IconEdit size={16} />
-                        Edit Dataset
-                    </Button>
-                    <Button variant="destructive" size="sm" className="gap-2">
-                        <IconTrash size={16} />
-                        Delete
-                    </Button>
-                </div>
-            </div>
+                <Button variant="destructive" size="sm" className="gap-2">
+                    <IconTrash size={16} />
+                    Delete
+                </Button>
+            </ViewHeader>
 
             <div className="space-y-6">
                 <div className="space-y-2">
