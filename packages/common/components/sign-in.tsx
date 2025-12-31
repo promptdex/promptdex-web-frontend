@@ -1,127 +1,28 @@
-import { useSignIn, useSignUp } from '@clerk/nextjs';
-import { isClerkAPIResponseError } from '@clerk/nextjs/errors';
+'use client';
+
 import { Button, InputOTP, InputOTPGroup, InputOTPSlot } from '@repo/ui';
 import { IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
+import { signIn, authClient } from '../hooks/use-auth';
+
 type CustomSignInProps = {
     redirectUrl?: string;
     onClose?: () => void;
 };
 
 export const CustomSignIn = ({
-    redirectUrl = '/sign-in/sso-callback',
+    redirectUrl = '/chat',
     onClose,
 }: CustomSignInProps) => {
     const [isLoading, setIsLoading] = useState<string | null>(null);
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [verifying, setVerifying] = useState(false);
-    const { signIn, isLoaded, setActive } = useSignIn();
-    const { signUp, isLoaded: isSignUpLoaded } = useSignUp();
     const [code, setCode] = useState('');
     const [resending, setResending] = useState(false);
-    if (!isSignUpLoaded || !isLoaded) return null;
     const router = useRouter();
-
-    const handleVerify = async () => {
-        // Check if code is complete
-        if (code.length !== 6) {
-            setError('Please enter the complete 6-digit code');
-            return;
-        }
-
-        setIsLoading('verify');
-        try {
-            if (!isLoaded || !signIn) return;
-            const result = await signUp.attemptEmailAddressVerification({
-                code,
-            });
-
-            if (result.status === 'complete') {
-                setActive({ session: result.createdSessionId });
-                router.push('/chat');
-            }
-        } catch (error: any) {
-            console.log(error.errors);
-            if (error.errors && error.errors.some((e: any) => e.code === 'client_state_invalid')) {
-                try {
-                    const result = await signIn.attemptFirstFactor({
-                        strategy: 'email_code',
-                        code,
-                    });
-
-                    if (result.status === 'complete') {
-                        setActive({ session: result.createdSessionId });
-                        router.push('/chat');
-                    }
-                } catch (error) {
-                    if (isClerkAPIResponseError(error)) {
-                        console.log(error);
-                    }
-
-                    console.error('Sign-in error:', error);
-                    setError('Something went wrong while signing in. Please try again.');
-                }
-            } else {
-                console.error('Verification error:', error);
-            }
-        } finally {
-            setIsLoading(null);
-        }
-    };
-
-    const handleGoogleAuth = async () => {
-        setIsLoading('google');
-
-        try {
-            if (!isLoaded || !signIn) return;
-            await signIn.authenticateWithRedirect({
-                strategy: 'oauth_google',
-                redirectUrl,
-                redirectUrlComplete: redirectUrl,
-            });
-        } catch (error) {
-            console.error('Google authentication error:', error);
-        } finally {
-            setIsLoading(null);
-        }
-    };
-
-    const handleGithubAuth = async () => {
-        setIsLoading('github');
-
-        try {
-            if (!isLoaded || !signIn) return;
-            await signIn.authenticateWithRedirect({
-                strategy: 'oauth_github',
-                redirectUrl,
-                redirectUrlComplete: redirectUrl,
-            });
-        } catch (error) {
-            console.error('GitHub authentication error:', error);
-        } finally {
-            setIsLoading(null);
-        }
-    };
-
-    const handleAppleAuth = async () => {
-        setIsLoading('apple');
-
-        try {
-            if (!isLoaded || !signIn) return;
-            await signIn.authenticateWithRedirect({
-                strategy: 'oauth_apple',
-                redirectUrl,
-                redirectUrlComplete: redirectUrl,
-            });
-        } catch (error) {
-            console.error('Apple authentication error:', error);
-        } finally {
-            setIsLoading(null);
-        }
-    };
 
     const validateEmail = (email: string) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -143,127 +44,79 @@ export const CustomSignIn = ({
         }
 
         try {
-            // Try signing up the user first
-            await signUp.create({ emailAddress: email });
-
-            // If sign-up is successful, send the magic link
-            const protocol = window.location.protocol;
-            const host = window.location.host;
-            const fullRedirectUrl = `${protocol}//${host}${redirectUrl}`;
-
-            await signUp.prepareEmailAddressVerification({
-                strategy: 'email_code',
+            const { error: signInError } = await authClient.emailOtp.sendVerificationOtp({
+                email,
+                type: 'sign-in',
             });
 
-            setVerifying(true);
-        } catch (error: any) {
-            if (
-                error.errors &&
-                error.errors.some((e: any) => e.code === 'form_identifier_exists')
-            ) {
-                try {
-                    // If the user already exists, sign them in instead
-                    const signInAttempt = await signIn.create({
-                        identifier: email,
-                    });
-
-                    console.log(signInAttempt);
-
-                    // Get the email address ID from the response and prepare the magic link
-                    const emailAddressIdObj: any = signInAttempt?.supportedFirstFactors?.find(
-                        (factor: any) => factor.strategy === 'email_code'
-                    );
-
-                    const emailAddressId: any = emailAddressIdObj?.emailAddressId || '';
-
-                    if (emailAddressId) {
-                        await signIn.prepareFirstFactor({
-                            strategy: 'email_code',
-                            emailAddressId,
-                        });
-
-                        setVerifying(true);
-                    } else {
-                        throw new Error('Email address ID not found');
-                    }
-                } catch (error: any) {
-                    console.log(error.message);
-                    if (error.includes('Incorrect code')) {
-                        setError('Incorrect code. Please try again.');
-                    } else {
-                        console.error('Sign-in error:', error);
-                        setError('Something went wrong while signing in. Please try again.');
-                    }
-                }
+            if (signInError) {
+                setError(signInError.message || 'Failed to send verification code');
             } else {
-                console.error('Authentication error:', error);
-                setError(
-                    error?.errors?.[0]?.longMessage || 'Authentication failed. Please try again.'
-                );
+                setVerifying(true);
             }
+        } catch (err: any) {
+            console.error('Email auth error:', err);
+            setError('An unexpected error occurred');
         } finally {
             setIsLoading(null);
         }
     };
 
-    const handleSendCode = async () => {
-        // Don't proceed if already resending
-        if (resending) return;
-
-        // Check if email is available
-        if (!email) {
-            setError('Email is missing. Please try again.');
+    const handleVerify = async (otpValue?: string) => {
+        const finalCode = otpValue || code;
+        if (finalCode.length !== 6) {
+            setError('Please enter the complete 6-digit code');
             return;
         }
 
-        setResending(true);
+        setIsLoading('verify');
         setError('');
 
         try {
-            // First try with signUp flow
-            await signUp.prepareEmailAddressVerification({
-                strategy: 'email_code',
+            const { data, error: verifyError } = await signIn.emailOtp({
+                email,
+                otp: finalCode,
             });
 
-            // Show a success message
-            setError('');
-        } catch (error: any) {
-            // If error, try with signIn flow
-            if (error.errors && error.errors.some((e: any) => e.code === 'client_state_invalid')) {
-                try {
-                    const signInAttempt = await signIn.create({
-                        identifier: email,
-                    });
-
-                    const emailAddressIdObj: any = signInAttempt?.supportedFirstFactors?.find(
-                        (factor: any) => factor.strategy === 'email_code'
-                    );
-
-                    const emailAddressId: any = emailAddressIdObj?.emailAddressId || '';
-
-                    if (emailAddressId) {
-                        await signIn.prepareFirstFactor({
-                            strategy: 'email_code',
-                            emailAddressId,
-                        });
-                    } else {
-                        throw new Error('Email address ID not found');
-                    }
-                } catch (error) {
-                    if (isClerkAPIResponseError(error)) {
-                        console.error('Error resending code:', error);
-                    }
-                    setError('Failed to resend code. Please try again.');
-                }
-            } else {
-                console.error('Error resending code:', error);
-                setError('Failed to resend code. Please try again.');
+            if (verifyError) {
+                setError(verifyError.message || 'Invalid verification code');
+            } else if (data) {
+                router.push(redirectUrl);
+                onClose?.();
             }
+        } catch (err: any) {
+            console.error('Verification error:', err);
+            setError('An unexpected error occurred during verification');
         } finally {
-            // Wait a moment before allowing another resend (to prevent spam)
-            setTimeout(() => {
-                setResending(false);
-            }, 3000);
+            setIsLoading(null);
+        }
+    };
+
+    const handleGoogleAuth = async () => {
+        setIsLoading('google');
+        try {
+            await signIn.social({
+                provider: 'google',
+                callbackURL: redirectUrl,
+            });
+        } catch (err: any) {
+            console.error('Google auth error:', err);
+            setError('Failed to authenticate with Google');
+            setIsLoading(null);
+        }
+    };
+
+    const handleGithubAuth = async () => {
+        setIsLoading('github');
+        try {
+            await signIn.social({
+                provider: 'github',
+                callbackURL: redirectUrl,
+            });
+        } catch (err: any) {
+            console.error('GitHub auth error:', err);
+            setError('Failed to authenticate with GitHub');
+            setIsLoading(null);
         }
     };
 
@@ -275,8 +128,7 @@ export const CustomSignIn = ({
                         Check your email
                     </h2>
                     <p className="text-muted-foreground text-center text-sm">
-                        We've sent a code to your email. Please check your inbox and enter the code
-                        to continue.
+                        We've sent a code to <strong>{email}</strong>. Please check your inbox.
                     </p>
                 </div>
                 <InputOTP
@@ -284,7 +136,7 @@ export const CustomSignIn = ({
                     autoFocus
                     value={code}
                     onChange={setCode}
-                    onComplete={handleVerify}
+                    onComplete={(val) => handleVerify(val)}
                 >
                     <InputOTPGroup>
                         <InputOTPSlot index={0} />
@@ -295,87 +147,117 @@ export const CustomSignIn = ({
                         <InputOTPSlot index={5} />
                     </InputOTPGroup>
                 </InputOTP>
-                <p className="text-muted-foreground text-center text-sm">
-                    Didn't receive an email?{' '}
-                    <span
-                        className={`hover:text-brand text-brand cursor-pointer underline ${
-                            resending ? 'pointer-events-none opacity-70' : ''
-                        }`}
-                        onClick={handleSendCode}
-                    >
-                        {resending ? 'Sending...' : 'Resend Code'}
-                    </span>
-                </p>
 
-                <div id="clerk-captcha"></div>
-                <div className="text-muted-foreground text-center text-sm">
-                    {error && <p className="text-rose-400">{error}</p>}
-                    {resending && <p className="text-brand">Sending verification code...</p>}
+                <div className="text-center text-sm">
+                    {error && <p className="text-rose-400 mb-2">{error}</p>}
+                    <p className="text-muted-foreground">
+                        Didn't receive an email?{' '}
+                        <button
+                            className={`text-brand hover:underline disabled:opacity-50`}
+                            onClick={handleEmailAuth}
+                            disabled={resending || isLoading === 'email'}
+                        >
+                            {resending ? 'Sending...' : 'Resend Code'}
+                        </button>
+                    </p>
                 </div>
+
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setVerifying(false)}
+                    className="mt-2"
+                >
+                    Back to sign in
+                </Button>
             </div>
         );
     }
 
     return (
-        <>
+        <div className="relative">
             <Button
-                onClick={() => {
-                    onClose?.();
-                }}
+                onClick={() => onClose?.()}
                 variant="ghost"
                 size="icon-sm"
-                className="absolute right-2 top-2"
+                className="absolute -right-2 -top-2"
             >
                 <IconX className="h-4 w-4" />
             </Button>
-            <div className="flex w-[320px] flex-col items-center gap-8">
-                <h2 className="text-muted-foreground/70 text-center text-[24px] font-semibold leading-tight">
-                    Sign in to unlock <br /> advanced research tools
-                </h2>
 
-                <div className="flex w-[300px] flex-col space-y-1.5">
-                    <Button
-                        onClick={handleGoogleAuth}
-                        disabled={isLoading === 'google'}
-                        variant="bordered"
-                    >
-                        {isLoading === 'google' ? (
-                            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                        ) : (
-                            <FaGoogle className=" size-3" />
-                        )}
-                        {isLoading === 'google' ? 'Authenticating...' : 'Continue with Google'}
-                    </Button>
-
-                    <Button
-                        onClick={handleGithubAuth}
-                        disabled={isLoading === 'github'}
-                        variant="bordered"
-                    >
-                        {isLoading === 'github' ? (
-                            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                        ) : (
-                            <FaGithub className=" size-3" />
-                        )}
-                        {isLoading === 'github' ? 'Authenticating...' : 'Continue with GitHub'}
-                    </Button>
+            <div className="flex w-[320px] flex-col items-center gap-6">
+                <div className="space-y-2 text-center">
+                    <h2 className="text-foreground text-[24px] font-semibold leading-tight">
+                        Welcome back
+                    </h2>
+                    <p className="text-muted-foreground text-sm">
+                        Sign in to access your research workflows
+                    </p>
                 </div>
-                <div className="text-muted-foreground/50 w-full text-center text-xs">
-                    <span className="text-muted-foreground/50">
-                        By using this app, you agree to the{' '}
-                    </span>
-                    <a href="/terms" className="hover:text-foreground underline">
-                        Terms of Service
-                    </a>{' '}
+
+                <div className="flex w-full flex-col space-y-3">
+                    <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground px-1">Email Address</label>
+                        <div className="flex gap-2">
+                            <input
+                                type="email"
+                                placeholder="name@example.com"
+                                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleEmailAuth()}
+                            />
+                            <Button
+                                onClick={handleEmailAuth}
+                                disabled={isLoading === 'email'}
+                                size="sm"
+                                className="shrink-0"
+                            >
+                                {isLoading === 'email' ? '...' : 'Send'}
+                            </Button>
+                        </div>
+                        {error && !verifying && <p className="text-[10px] text-rose-500 px-1">{error}</p>}
+                    </div>
+
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t border-border" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <Button
+                            onClick={handleGoogleAuth}
+                            disabled={!!isLoading}
+                            variant="bordered"
+                            className="bg-background"
+                        >
+                            <FaGoogle className="mr-2 size-3" />
+                            Google
+                        </Button>
+
+                        <Button
+                            onClick={handleGithubAuth}
+                            disabled={!!isLoading}
+                            variant="bordered"
+                            className="bg-background"
+                        >
+                            <FaGithub className="mr-2 size-3" />
+                            GitHub
+                        </Button>
+                    </div>
+                </div>
+
+                <p className="text-muted-foreground/60 text-center text-[10px]">
+                    By continuing, you agree to our{' '}
+                    <a href="/terms" className="hover:text-foreground underline">Terms</a>{' '}
                     and{' '}
-                    <a href="/privacy" className="hover:text-foreground underline">
-                        Privacy Policy
-                    </a>
-                </div>
-                <Button variant="ghost" size="sm" className="w-full" onClick={onClose}>
-                    Close
-                </Button>
+                    <a href="/privacy" className="hover:text-foreground underline">Privacy Policy</a>.
+                </p>
             </div>
-        </>
+        </div>
     );
 };

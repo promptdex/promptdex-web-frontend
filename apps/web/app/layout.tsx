@@ -1,4 +1,3 @@
-import { ClerkProvider } from '@clerk/nextjs';
 import { cn } from '@repo/ui';
 import { GeistMono } from 'geist/font/mono';
 import type { Viewport } from 'next';
@@ -91,19 +90,17 @@ export default function ParentLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <ClerkProvider>
-            <html
-                lang="en"
-                className={cn(GeistMono.variable, inter.variable, clash.variable, bricolage.variable)}
-                suppressHydrationWarning
-            >
-                <head>
-                    <link rel="icon" href="/favicon.ico" sizes="any" />
-                </head>
-                <body>
-                    <ClientProviders>{children}</ClientProviders>
-                </body>
-            </html>
-        </ClerkProvider>
+        <html
+            lang="en"
+            className={cn(GeistMono.variable, inter.variable, clash.variable, bricolage.variable)}
+            suppressHydrationWarning
+        >
+            <head>
+                <link rel="icon" href="/favicon.ico" sizes="any" />
+            </head>
+            <body>
+                <ClientProviders>{children}</ClientProviders>
+            </body>
+        </html>
     );
 }

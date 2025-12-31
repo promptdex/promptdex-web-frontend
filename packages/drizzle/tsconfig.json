@@ -1,0 +1,12 @@
+{
+  "extends": "@repo/typescript-config",
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ESNext",
+    "types": ["node"]
+  },
+  "include": ["."],
+  "exclude": ["node_modules", "dist"]
+}

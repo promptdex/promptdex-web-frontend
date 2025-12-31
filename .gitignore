@@ -34,3 +34,11 @@ yarn-error.log*
 # turbo
 .turbo
 
+# OpenNext / Cloudflare
+.open-next/
+.wrangler/
+.dev.vars
+
+# Build output
+build_output.txt
+

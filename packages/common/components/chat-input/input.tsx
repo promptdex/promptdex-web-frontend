@@ -1,5 +1,5 @@
 'use client';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '../../hooks/use-auth';
 import {
     ImageAttachment,
     ImageDropzoneRoot,

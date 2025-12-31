@@ -1,10 +1,12 @@
-import { SignInButton, useAuth, UserButton } from '@clerk/nextjs';
+import { useAuth, signOut } from '../../hooks/use-auth';
 import { FullPageLoader, HistoryItem } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
-import { Thread, useAppStore, useChatStore } from '@repo/common/store';
+import { useAppStore, useChatStore } from '@repo/common/store';
+import { Thread } from '@repo/shared/types';
 import { Button, cn, Flex } from '@repo/ui';
-import { IconArrowBarLeft, IconArrowBarRight, IconPlus, IconSearch } from '@tabler/icons-react';
+import { IconArrowBarLeft, IconArrowBarRight, IconLogout, IconPlus, IconSearch, IconUser } from '@tabler/icons-react';
 import moment from 'moment';
+import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
 export const Sidebar = () => {
@@ -64,11 +66,18 @@ export const Sidebar = () => {
                                 setIsSidebarOpen(prev => false);
                             }}
                             isActive={thread.id === currentThreadId}
+                            pinThread={() => { }}
+                            unpinThread={() => { }}
                         />
                     ))}
                 </Flex>
             </Flex>
         );
+    };
+
+    const handleSignOut = async () => {
+        await signOut();
+        push('/');
     };
 
     return (
@@ -166,23 +175,21 @@ export const Sidebar = () => {
                     )}
                     <div className="sticky right-0 top-0 z-50 flex items-center gap-1 px-4 py-2">
                         {isSignedIn ? (
-                            <UserButton
-                                showName
-                                appearance={{
-                                    elements: {
-                                        avatarBox:
-                                            'size-6 bg-muted-foreground border border-border',
-                                        userButtonAvatarBox: 'bg-muted-foreground',
-                                        userPreviewAvatarIcon: 'bg-muted-foreground',
-                                    },
-                                }}
-                            />
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleSignOut}
+                                className="gap-2"
+                            >
+                                <IconLogout size={16} strokeWidth={2} />
+                                {isSidebarOpen && 'Sign Out'}
+                            </Button>
                         ) : (
-                            <SignInButton mode="modal">
+                            <Link href="/sign-in">
                                 <Button variant="default" size="sm" rounded="full">
                                     Log in
                                 </Button>
-                            </SignInButton>
+                            </Link>
                         )}
                     </div>
                 </Flex>

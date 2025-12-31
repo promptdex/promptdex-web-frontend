@@ -14,10 +14,11 @@
         "type-check": "tsc --noEmit"
     },
     "dependencies": {
-        "@clerk/nextjs": "^6.36.5",
+        "better-auth": "^1.4.9",
         "@mdx-js/mdx": "^3.1.1",
         "@repo/actions": "*",
         "@repo/ai": "*",
+        "@repo/prisma": "workspace:*",
         "@repo/shared": "*",
         "@repo/ui": "*",
         "@tabler/icons-react": "^3.36.0",

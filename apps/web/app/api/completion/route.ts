@@ -1,6 +1,6 @@
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/lib/auth';
 import { CHAT_MODE_CREDIT_COSTS, ChatModeConfig } from '@repo/shared/config';
-import { Geo, geolocation } from '@vercel/functions';
+import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 import {
     DAILY_CREDITS_AUTH,
@@ -20,8 +20,10 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        const session = await auth();
-        const userId = session?.userId ?? undefined;
+        const session = await auth.api.getSession({
+            headers: await headers(),
+        });
+        const userId = session?.user?.id ?? undefined;
 
         const parsed = await request.json().catch(() => ({}));
         const validatedBody = completionRequestSchema.safeParse(parsed);
@@ -86,7 +88,7 @@ export async function POST(request: NextRequest) {
             abortController.abort();
         });
 
-        const gl = geolocation(request);
+        const gl = {}; // Mock geolocation for now
 
         console.log('gl', gl);
 
@@ -95,7 +97,7 @@ export async function POST(request: NextRequest) {
             userId,
             ip,
             abortController,
-            gl,
+            gl: gl as any,
         });
 
         return new Response(stream, { headers: enhancedHeaders });
@@ -119,7 +121,7 @@ function createCompletionStream({
     userId?: string;
     ip?: string;
     abortController: AbortController;
-    gl: Geo;
+    gl: any;
 }) {
     const encoder = new TextEncoder();
 
