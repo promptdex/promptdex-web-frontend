@@ -7,7 +7,8 @@ import {
 } from '@repo/common/components';
 import { useImageAttachment } from '@repo/common/hooks';
 import { ChatModeConfig } from '@repo/shared/config';
-import { cn, Flex } from '@repo/ui';
+import { cn, Flex, Button } from '@repo/ui';
+import { IconLock, IconLockOpen } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -33,7 +34,7 @@ export const ChatInput = ({
     const { isSignedIn } = useAuth();
 
     const { threadId: currentThreadId } = useParams();
-    const { editor } = useChatEditor({
+    const { editor, isTemplateMode, setIsTemplateMode, setManualUnlock, hasVariables, toggleTemplateMode } = useChatEditor({
         placeholder: isFollowUp ? 'Ask follow up' : 'Ask anything',
         onInit: ({ editor }) => {
             if (typeof window !== 'undefined' && !isFollowUp && !isSignedIn) {
@@ -121,7 +122,7 @@ export const ChatInput = ({
                 <Flex
                     direction="col"
                     className={cn(
-                        'bg-background border-hard/50 shadow-subtle-sm relative z-10 w-full rounded-xl border'
+                        'bg-background/60 backdrop-blur-2xl border-border/40 shadow-subtle-xl relative z-10 w-full rounded-[32px] border transition-all duration-300 focus-within:border-primary/30 focus-within:shadow-primary/5'
                     )}
                 >
                     <ImageDropzoneRoot dropzoneProps={dropzonProps}>
@@ -129,9 +130,9 @@ export const ChatInput = ({
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.15 }}
-                            className="flex w-full flex-shrink-0 overflow-hidden rounded-lg"
+                            className="flex w-full flex-shrink-0 overflow-hidden rounded-[32px]"
                         >
-                            {editor?.isEditable ? (
+                            {editor ? (
                                 <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
@@ -143,12 +144,13 @@ export const ChatInput = ({
                                         <ChatEditor
                                             sendMessage={sendMessage}
                                             editor={editor}
-                                            className="px-3 pt-3"
+                                            className="px-6 pt-6 pb-2"
+                                            isTemplateMode={isTemplateMode}
                                         />
                                     </Flex>
 
                                     <Flex
-                                        className="border-border w-full gap-0 border-t border-dashed px-2 py-2"
+                                        className="border-border/20 w-full gap-0 border-t border-dashed px-4 py-3"
                                         gap="none"
                                         items="center"
                                         justify="between"
@@ -172,6 +174,17 @@ export const ChatInput = ({
                                         )}
 
                                         <Flex gap="md" items="center">
+                                            {hasVariables && (
+                                                <Button
+                                                    size="icon-xs"
+                                                    variant="ghost"
+                                                    onClick={toggleTemplateMode}
+                                                    tooltip={isTemplateMode ? "Unlock full editing" : "Lock template inputs"}
+                                                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                                                >
+                                                    {isTemplateMode ? <IconLock size={18} /> : <IconLockOpen size={18} />}
+                                                </Button>
+                                            )}
                                             <SendStopButton
                                                 isGenerating={isGenerating}
                                                 isChatPage={isChatPage}
@@ -238,6 +251,17 @@ export const ChatInput = ({
                 >
                     {!currentThreadId && showGreeting && (
                         <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: 0.1 }}
+                            className="mb-12 w-full"
+                        >
+                            <TemplateLibrary />
+                        </motion.div>
+                    )}
+
+                    {!currentThreadId && showGreeting && (
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3, ease: 'easeOut' }}
@@ -248,7 +272,6 @@ export const ChatInput = ({
                     )}
 
                     {renderChatBottom()}
-                    {!currentThreadId && showGreeting && <TemplateLibrary />}
 
                     {/* <ChatFooter /> */}
                 </Flex>
@@ -293,19 +316,19 @@ const AnimatedTitles = ({ titles = [] }: AnimatedTitlesProps) => {
     return (
         <Flex
             direction="col"
-            className="relative h-[60px] w-full items-center justify-center overflow-hidden"
+            className="relative h-[80px] w-full items-center justify-center overflow-hidden"
         >
             <AnimatePresence mode="wait">
                 <motion.h1
                     key={greeting}
-                    initial={{ opacity: 0, y: -5 }}
+                    initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 5 }}
+                    exit={{ opacity: 0, y: 10 }}
                     transition={{
                         duration: 0.8,
-                        ease: 'easeInOut',
+                        ease: [0.16, 1, 0.3, 1],
                     }}
-                    className="from-muted-foreground/50 via-muted-foreground/40 to-muted-foreground/20 bg-gradient-to-r bg-clip-text text-center text-[32px] font-semibold tracking-tight text-transparent"
+                    className="from-foreground via-foreground/80 to-foreground/40 bg-gradient-to-br bg-clip-text text-center text-[42px] font-bold tracking-tight text-transparent md:text-[56px]"
                 >
                     {greeting}
                 </motion.h1>

@@ -11,7 +11,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
             <TooltipProvider>
                 <ReactQueryProvider>
                     <AgentProvider>
-                        <RootLayout>{children}</RootLayout>
+                        {children}
                     </AgentProvider>
                 </ReactQueryProvider>
             </TooltipProvider>

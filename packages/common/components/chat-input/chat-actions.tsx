@@ -153,10 +153,10 @@ export const ChatModeButton = () => {
     return (
         <DropdownMenu open={isChatModeOpen} onOpenChange={setIsChatModeOpen}>
             <DropdownMenuTrigger asChild>
-                <Button variant={'secondary'} size="xs">
+                <Button variant={'secondary'} size="xs" className="h-8 rounded-lg bg-muted/40 border-0 hover:bg-muted/60 transition-colors">
                     {selectedOption?.icon}
-                    {selectedOption?.label}
-                    <IconChevronDown size={14} strokeWidth={2} />
+                    <span className="font-semibold text-[11px] uppercase tracking-wider">{selectedOption?.label}</span>
+                    <IconChevronDown size={12} strokeWidth={2} className="opacity-50" />
                 </Button>
             </DropdownMenuTrigger>
             <ChatModeOptions chatMode={chatMode} setChatMode={setChatMode} />
@@ -177,15 +177,18 @@ export const WebSearchButton = () => {
             size={useWebSearch ? 'sm' : 'icon-sm'}
             tooltip="Web Search"
             variant={useWebSearch ? 'secondary' : 'ghost'}
-            className={cn('gap-2', useWebSearch && 'bg-blue-500/10 text-blue-500')}
+            className={cn(
+                'gap-2 h-8 rounded-lg transition-all duration-300',
+                useWebSearch ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' : 'text-muted-foreground hover:bg-muted/40'
+            )}
             onClick={() => setUseWebSearch(!useWebSearch)}
         >
             <IconWorld
                 size={16}
                 strokeWidth={2}
-                className={cn(useWebSearch ? '!text-blue-500' : 'text-muted-foreground')}
+                className={cn(useWebSearch ? 'text-blue-500' : 'text-muted-foreground')}
             />
-            {useWebSearch && <p className="text-xs">Web</p>}
+            {useWebSearch && <p className="text-[11px] font-bold uppercase tracking-wider">Search</p>}
         </Button>
     );
 };
@@ -329,21 +332,29 @@ export const SendStopButton = ({
                 ) : (
                     <motion.div
                         key="send-button"
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.8, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{ scale: 0.9, opacity: 0, y: 5 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.9, opacity: 0, y: -5 }}
+                        transition={{
+                            type: 'spring',
+                            stiffness: 400,
+                            damping: 25
+                        }}
                     >
                         <Button
                             size="icon-sm"
                             tooltip="Send Message"
                             variant={hasTextInput ? 'default' : 'secondary'}
                             disabled={!hasTextInput || isGenerating}
+                            className={cn(
+                                "h-9 w-9 rounded-xl transition-all duration-300",
+                                hasTextInput ? "bg-foreground shadow-lg shadow-foreground/10" : "bg-muted/40 border-0"
+                            )}
                             onClick={() => {
                                 sendMessage();
                             }}
                         >
-                            <IconArrowUp size={16} strokeWidth={2} />
+                            <IconArrowUp size={20} strokeWidth={2.5} />
                         </Button>
                     </motion.div>
                 )}

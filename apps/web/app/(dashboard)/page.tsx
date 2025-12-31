@@ -3,5 +3,5 @@
 import { ChatInput } from '@repo/common/components';
 
 export default function Home() {
-    return <ChatInput />;
+    return <></>;
 }

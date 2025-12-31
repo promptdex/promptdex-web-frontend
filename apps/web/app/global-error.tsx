@@ -2,6 +2,7 @@
 
 import * as Sentry from '@sentry/nextjs';
 import { useEffect } from 'react';
+import { MaintenanceView } from '@/components/maintenance-view';
 
 export default function GlobalError({
     error,
@@ -19,22 +20,7 @@ export default function GlobalError({
     return (
         <html>
             <body>
-                <div className="flex h-screen w-screen flex-col items-center justify-center bg-emerald-50">
-                    <div className="flex w-[300px] flex-col gap-2">
-                        <p className="text-base">Oops! Something went wrong.</p>
-                        <p className="text-brand text-sm">
-                            It seems we encountered an unexpected error. Please try refreshing the
-                            page or check back later. If the problem persists, feel free to{' '}
-                            <a href="mailto:hello@llmchat.com">contact team</a>.
-                        </p>
-                        <button
-                            onClick={() => reset()}
-                            className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                        >
-                            Try again
-                        </button>
-                    </div>
-                </div>
+                <MaintenanceView type="error" error={error} reset={reset} />
             </body>
         </html>
     );

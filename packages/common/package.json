@@ -23,6 +23,7 @@
         "@repo/ui": "*",
         "@tabler/icons-react": "^3.36.0",
         "@tanstack/react-query": "^5.90.16",
+        "@tiptap/core": "^3.14.0",
         "@tiptap/extension-character-count": "^3.14.0",
         "@tiptap/extension-document": "^3.14.0",
         "@tiptap/extension-hard-break": "^3.14.0",

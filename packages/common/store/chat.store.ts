@@ -234,6 +234,9 @@ const initializeWorker = () => {
     if (typeof window === 'undefined') return;
 
     try {
+        if (typeof SharedWorker === 'undefined') {
+            throw new Error('SharedWorker is not supported in this environment');
+        }
         // Create a shared worker - use dynamic URL to avoid webpack warning
         const workerUrl = new URL('./db-sync.worker.ts', import.meta.url);
         dbWorker = new SharedWorker(workerUrl, {
@@ -327,7 +330,11 @@ const initializeTabSync = () => {
         if (event.key !== SYNC_EVENT_KEY) return;
 
         try {
-            const syncData = JSON.parse(localStorage.getItem(SYNC_DATA_KEY) || '{}');
+            if (typeof localStorage === 'undefined') return;
+            const rawData = localStorage.getItem(SYNC_DATA_KEY);
+            if (!rawData) return;
+            
+            const syncData = JSON.parse(rawData);
 
             if (!syncData || !syncData.type) return;
 
