@@ -23,25 +23,25 @@ export const SelectVariable: React.FC<SelectVariableProps> = ({
     onSelect,
 }) => {
     return (
-        <NodeViewWrapper as="span" className="inline-block mx-1 align-middle relative my-2">
+        <NodeViewWrapper as="span" className="inline-block mx-1 align-middle relative my-1">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="outlined"
                         className={cn(
-                            "h-14 min-w-[240px] justify-between px-5 text-sm font-semibold rounded-[20px] bg-white/[0.03] dark:bg-black/[0.1] border-white/10 dark:border-white/5 hover:bg-white/[0.06] hover:border-white/20 transition-all backdrop-blur-md group animate-in fade-in duration-500",
+                            "h-9 min-w-[160px] justify-between px-3 text-xs font-medium rounded-lg bg-white/[0.03] dark:bg-black/[0.1] border-white/10 dark:border-white/5 hover:bg-white/[0.06] hover:border-white/20 transition-all backdrop-blur-md group",
                             !value && "text-muted-foreground"
                         )}
                     >
-                        <div className="flex flex-col items-start gap-1 text-left">
-                            <span className="text-[9px] uppercase tracking-[0.2em] opacity-40 font-black px-0.5">{label}</span>
-                            <span className="truncate max-w-[160px] text-base group-hover:text-foreground transition-colors">{value || `Select Option`}</span>
+                        <div className="flex items-center gap-2 text-left overflow-hidden">
+                            <span className="text-[9px] uppercase tracking-wider opacity-50 font-bold shrink-0">{label}</span>
+                            <span className="truncate max-w-[120px] text-foreground transition-colors">{value || `Select Option`}</span>
                         </div>
-                        <IconChevronDown className="h-4 w-4 opacity-40 ml-4 group-hover:opacity-80 transition-opacity" />
+                        <IconChevronDown className="h-3 w-3 opacity-40 ml-2 group-hover:opacity-80 transition-opacity" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[240px] rounded-2xl shadow-2xl border-white/10 bg-background/95 backdrop-blur-xl p-1.5">
-                    <DropdownMenuItem disabled className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] pb-3 pt-2 px-3">
+                <DropdownMenuContent className="w-[200px] rounded-xl shadow-xl border-white/10 bg-background/95 backdrop-blur-xl p-1">
+                    <DropdownMenuItem disabled className="text-muted-foreground text-[9px] font-bold uppercase tracking-wider pb-1.5 pt-1 px-2">
                         {label}
                     </DropdownMenuItem>
                     {options.map((opt, i) => (
@@ -49,8 +49,8 @@ export const SelectVariable: React.FC<SelectVariableProps> = ({
                             key={i}
                             onClick={() => onSelect(opt)}
                             className={cn(
-                                "rounded-xl px-3 py-2 text-sm transition-all focus:bg-primary/10 focus:text-primary",
-                                value === opt && "bg-primary/10 text-primary font-bold"
+                                "rounded-lg px-2 py-1.5 text-xs transition-all focus:bg-primary/10 focus:text-primary cursor-pointer",
+                                value === opt && "bg-primary/5 text-primary font-medium"
                             )}
                         >
                             {opt}

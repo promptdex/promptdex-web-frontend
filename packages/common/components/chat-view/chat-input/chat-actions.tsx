@@ -18,32 +18,19 @@ import {
     IconArrowUp,
     IconAtom,
     IconChevronDown,
+    IconMicrophone,
     IconNorthStar,
     IconPaperclip,
     IconPlayerStopFilled,
     IconWorld,
+    IconX
 } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BYOKIcon, NewIcon } from '../../shared-ui';
 
-export const chatOptions = [
-    {
-        label: 'Deep Research',
-        description: 'In depth research on complex topic',
-        value: ChatMode.Deep,
-        icon: <IconAtom size={16} className="text-muted-foreground" strokeWidth={2} />,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.Deep],
-    },
-    {
-        label: 'Pro Search',
-        description: 'Pro search with web search',
-        value: ChatMode.Pro,
-        icon: <IconNorthStar size={16} className="text-muted-foreground" strokeWidth={2} />,
-        creditCost: CHAT_MODE_CREDIT_COSTS[ChatMode.Pro],
-    },
-];
+
 
 export const modelOptions = [
     {
@@ -147,7 +134,7 @@ export const ChatModeButton = () => {
 
     const selectedOption =
         (isChatPage
-            ? [...chatOptions, ...modelOptions].find(option => option.value === chatMode)
+            ? [...modelOptions].find(option => option.value === chatMode)
             : [...modelOptions].find(option => option.value === chatMode)) ?? modelOptions[0];
 
     return (
@@ -175,11 +162,11 @@ export const WebSearchButton = () => {
     return (
         <Button
             size={useWebSearch ? 'sm' : 'icon-sm'}
-            tooltip="Web Search"
+            tooltip={useWebSearch ? "Disable Web Search" : "Enable Web Search"}
             variant={useWebSearch ? 'secondary' : 'ghost'}
             className={cn(
                 'gap-2 h-8 rounded-lg transition-all duration-300',
-                useWebSearch ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' : 'text-muted-foreground hover:bg-muted/40'
+                useWebSearch ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20 pr-2 pl-2.5' : 'text-muted-foreground hover:bg-muted/40'
             )}
             onClick={() => setUseWebSearch(!useWebSearch)}
         >
@@ -188,7 +175,64 @@ export const WebSearchButton = () => {
                 strokeWidth={2}
                 className={cn(useWebSearch ? 'text-blue-500' : 'text-muted-foreground')}
             />
-            {useWebSearch && <p className="text-[11px] font-bold uppercase tracking-wider">Search</p>}
+            {useWebSearch && (
+                <>
+                    <p className="text-[11px] font-bold uppercase tracking-wider">Search</p>
+                    <div className="flex items-center justify-center rounded-md hover:bg-blue-500/20 p-0.5 ml-1 transition-colors">
+                        <IconX size={12} strokeWidth={2.5} />
+                    </div>
+                </>
+            )}
+        </Button>
+    );
+};
+
+export const DeepResearchButton = () => {
+    // For now using local state as placeholder or we could add to chat store if needed really quick
+    // Ideally this should come from store like useWebSearch
+    const [isDeepResearch, setIsDeepResearch] = useState(false);
+
+    return (
+        <Button
+            size={isDeepResearch ? 'sm' : 'icon-sm'}
+            tooltip={isDeepResearch ? "Disable Deep Research" : "Enable Deep Research (Deep Learning)"}
+            variant={isDeepResearch ? 'secondary' : 'ghost'}
+            className={cn(
+                'gap-2 h-8 rounded-lg transition-all duration-300',
+                isDeepResearch ? 'bg-purple-500/10 text-purple-500 border border-purple-500/20 pr-2 pl-2.5' : 'text-muted-foreground hover:bg-muted/40'
+            )}
+            onClick={() => setIsDeepResearch(!isDeepResearch)}
+        >
+            <IconAtom
+                size={16}
+                strokeWidth={2}
+                className={cn(isDeepResearch ? 'text-purple-500' : 'text-muted-foreground')}
+            />
+            {isDeepResearch && (
+                <>
+                    <p className="text-[11px] font-bold uppercase tracking-wider">Deep</p>
+                    <div className="flex items-center justify-center rounded-md hover:bg-purple-500/20 p-0.5 ml-1 transition-colors">
+                        <IconX size={12} strokeWidth={2.5} />
+                    </div>
+                </>
+            )}
+        </Button>
+    );
+};
+
+export const VoiceInputButton = () => {
+    return (
+        <Button
+            size="icon-sm"
+            tooltip="Voice Input (Transcribe)"
+            variant="ghost"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            onClick={() => {
+                // Future: Implement voice transcription logic
+                console.log("Voice input clicked");
+            }}
+        >
+            <IconMicrophone size={18} strokeWidth={2} />
         </Button>
     );
 };
@@ -233,39 +277,7 @@ export const ChatModeOptions = ({
             side="bottom"
             className="no-scrollbar max-h-[300px] w-[300px] overflow-y-auto"
         >
-            {isChatPage && (
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                    {chatOptions.map(option => (
-                        <DropdownMenuItem
-                            key={option.label}
-                            onSelect={() => {
-                                if (ChatModeConfig[option.value]?.isAuthRequired && !isSignedIn) {
-                                    push('/sign-in');
-                                    return;
-                                }
-                                setChatMode(option.value);
-                            }}
-                            className="h-auto"
-                        >
-                            <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
-                                <div className="flex flex-col gap-0 pt-1">{option.icon}</div>
 
-                                <div className="flex flex-col gap-0">
-                                    {<p className="m-0 text-sm font-medium">{option.label}</p>}
-                                    {option.description && (
-                                        <p className="text-muted-foreground text-xs font-light">
-                                            {option.description}
-                                        </p>
-                                    )}
-                                </div>
-                                <div className="flex-1" />
-                                {ChatModeConfig[option.value]?.isNew && <NewIcon />}
-                            </div>
-                        </DropdownMenuItem>
-                    ))}
-                </DropdownMenuGroup>
-            )}
             <DropdownMenuGroup>
                 <DropdownMenuLabel>Models</DropdownMenuLabel>
                 {modelOptions.map(option => (

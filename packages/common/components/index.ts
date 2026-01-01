@@ -5,3 +5,6 @@ export * from './template-view';
 export * from './dataset-view';
 export * from './feedback-view';
 export * from './shared-ui';
+export * from './marketing/ui';
+export * from './marketing/sections';
+export * from './marketing/layout/page-wrapper';

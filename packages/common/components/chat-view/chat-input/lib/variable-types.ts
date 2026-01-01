@@ -22,6 +22,7 @@ export type VariableType =
     | 'emoji'        // Emoji picker
     | 'multiselect'  // Multiple selection
     | 'code'         // Code editor
+    | 'date-range'   // Date range picker
     | 'percentage';  // Percentage input 0-100%
 
 export interface VariableAttributes {

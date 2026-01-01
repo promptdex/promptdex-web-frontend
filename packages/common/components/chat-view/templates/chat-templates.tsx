@@ -2,105 +2,67 @@
 
 import {
     Button,
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogTrigger,
     cn
 } from '@repo/ui';
-import { IconTemplate, IconSearch } from '@tabler/icons-react';
+import { IconTemplate, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
-import { TemplateListing } from '../../template-view';
+import { TemplateDialog } from '../../shared-ui/dialogs';
 import { useChatStore } from '@repo/common/store';
+import { insertTemplateIntoEditor } from '@repo/common/lib';
 
 export const ChatTemplates = () => {
     const [isOpen, setIsOpen] = useState(false);
     const editor = useChatStore(state => state.editor);
+    const activeTemplate = useChatStore(state => state.activeTemplate);
+    const setActiveTemplate = useChatStore(state => state.setActiveTemplate);
 
     const handleSelect = (template: any) => {
         if (!editor) return;
 
-        // Manually parse the content into nodes to ensure variables are created
-        const nodes = [];
-        const content = template.content || '';
-        const regex = /\[(.*?)\]/g;
-        let lastIndex = 0;
-        let match;
+        setActiveTemplate(template);
 
-        while ((match = regex.exec(content)) !== null) {
-            // Add text before the variable
-            if (match.index > lastIndex) {
-                nodes.push({
-                    type: 'text',
-                    text: content.substring(lastIndex, match.index),
-                });
-            }
-            // Add the variable node
-            const [label, type, optionsStr] = match[1].split(':');
-            nodes.push({
-                type: 'variable',
-                attrs: {
-                    label,
-                    type: type || 'text',
-                    options: optionsStr ? optionsStr.split(',') : []
-                },
-            });
-            lastIndex = regex.lastIndex;
-        }
-        // Add remaining text
-        if (lastIndex < content.length) {
-            nodes.push({
-                type: 'text',
-                text: content.substring(lastIndex),
-            });
-        }
+        // Use shared helper to insert template with markdown support
+        insertTemplateIntoEditor(editor, template);
 
-        editor.commands.clearContent();
-
-        // We wrap it in a paragraph if it's inline content
-        editor.commands.setContent({
-            type: 'doc',
-            content: [
-                {
-                    type: 'paragraph',
-                    content: nodes.length > 0 ? nodes : [{ type: 'text', text: content }],
-                },
-            ],
-        });
-
-        // Focus editor after insertion
-        editor.commands.focus();
         setIsOpen(false);
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <Button
-                    size="icon-sm"
-                    tooltip="Browse Templates"
-                    variant="ghost"
-                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                >
+        <>
+            <Button
+                size={activeTemplate ? "sm" : "icon-sm"}
+                tooltip={activeTemplate ? "Change Template" : "Browse Templates"}
+                variant={activeTemplate ? "secondary" : "ghost"}
+                onClick={() => setIsOpen(true)}
+                className={cn(
+                    "transition-all duration-200",
+                    activeTemplate ? "h-8 px-2 pl-2.5 gap-2" : "h-8 w-8 text-muted-foreground hover:text-foreground"
+                )}
+            >
+                {activeTemplate ? (
+                    <>
+                        <IconTemplate size={14} strokeWidth={2.5} className="flex-shrink-0" />
+                        <span className="text-xs font-semibold max-w-[100px] truncate">
+                            {activeTemplate.title}
+                        </span>
+                        <div
+                            role="button"
+                            tabIndex={0}
+                            className="flex items-center justify-center rounded-md hover:bg-black/10 dark:hover:bg-white/20 p-0.5 -mr-1 transition-colors"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveTemplate(null);
+                                editor?.commands.clearContent();
+                            }}
+                        >
+                            <IconX size={12} strokeWidth={2.5} />
+                        </div>
+                    </>
+                ) : (
                     <IconTemplate size={18} strokeWidth={2} />
-                </Button>
-            </DialogTrigger>
-            <DialogContent ariaTitle="Template Library" className="max-w-5xl h-[80vh] flex flex-col p-0 overflow-hidden border-none bg-transparent shadow-none">
-                <div className="flex-1 overflow-y-auto no-scrollbar rounded-3xl bg-background/80 backdrop-blur-3xl border border-white/10 p-6 shadow-2xl">
-                    <DialogHeader className="mb-6">
-                        <DialogTitle className="text-2xl font-bold">Template Library</DialogTitle>
-                        <DialogDescription>
-                            Select a template to insert into your chat.
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="flex-1">
-                        <TemplateListing onSelect={handleSelect} />
-                    </div>
-                </div>
-            </DialogContent>
-        </Dialog>
+                )}
+            </Button>
+            <TemplateDialog open={isOpen} onOpenChange={setIsOpen} onSelect={handleSelect} />
+        </>
     );
 };

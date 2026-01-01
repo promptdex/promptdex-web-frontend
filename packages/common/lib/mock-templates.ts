@@ -153,6 +153,62 @@ export const MOCK_CATEGORIES: Category[] = [
             },
         ],
     },
+    {
+        id: 'showcase',
+        name: 'Showcase',
+        icon: IconCode,
+        color: 'text-orange-500',
+        templates: [
+            {
+                id: 'all-variables',
+                title: 'All Variables Demo',
+                description: 'A template demonstrating all available variable types.',
+                content:
+                    '# Variable Showcase\n\n' +
+                    '## Basic Inputs\n' +
+                    'Text: [Text Variable:text]\n' +
+                    'Textarea: [Textarea Variable:textarea]\n' +
+                    'Tags: [Tags Variable:tags]\n\n' +
+                    '## Selection\n' +
+                    'Select: [Select Variable:select:Option A,Option B,Option C]\n' +
+                    'Dropdown: [Dropdown Variable:dropdown:First,Second,Third]\n' +
+                    'Radio: [Radio Variable:radio:Yes,No,Maybe]\n' +
+                    'Multiselect: [Multiselect Variable:multiselect:Apple,Banana,Cherry,Date]\n\n' +
+                    '## Datasets\n' +
+                    'Dataset (Languages): [Language:dataset:languages]\n' +
+                    'Combobox (Topics): [Topic:combobox:topics]\n\n' +
+                    '## Numeric\n' +
+                    'Number: [Number Variable:number:0,100,1]\n' +
+                    'Range: [Range Variable:range:0,100,5]\n' +
+                    'Percentage: [Percentage Variable:percentage]\n' +
+                    'Rating: [Rating Variable:rating:5]\n\n' +
+                    '## Date & Time\n' +
+                    'Date: [Date Variable:date]\n' +
+                    'Date Range: [Date Range Variable:date-range]\n' +
+                    'Time: [Time Variable:time]\n' +
+                    'Datetime: [Datetime Variable:datetime]\n\n' +
+                    '## Validation\n' +
+                    'Email: [Email Variable:email]\n' +
+                    'URL: [URL Variable:url]\n' +
+                    'Phone: [Phone Variable:phone]\n\n' +
+                    '## Visual & Rich\n' +
+                    'Color: [Color Variable:color]\n' +
+                    'Emoji: [Emoji Variable:emoji]\n' +
+                    'Checkbox: [Checkbox Variable:checkbox]\n' +
+                    'Code:\n[Code Variable:code]'
+            },
+            {
+                id: 'advanced-logic',
+                title: 'Advanced Filtering',
+                description: 'Demonstrating dataset filtering capabilities.',
+                content:
+                    'Select a programming language from the standard list:\n' +
+                    '[Language:dataset:languages]\n\n' +
+                    'Now select a related topic (try searching or filtering):\n' +
+                    '[Topic:combobox:topics]'
+            }
+        ]
+    },
 ];
 
 export const getTemplateById = (templateId: string): Template | undefined => {

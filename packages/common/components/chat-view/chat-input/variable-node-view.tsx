@@ -21,6 +21,7 @@ import { EmojiVariable } from './lib/emoji-variable';
 import { MultiselectVariable } from './lib/multiselect-variable';
 import { CodeVariable } from './lib/code-variable';
 import { PercentageVariable } from './lib/percentage-variable';
+import { DateRangeVariable } from './lib/date-range-variable';
 
 export const VariableNodeView: React.FC<NodeViewProps> = (props) => {
     const [value, setValue] = useState(props.node.attrs.value || '');
@@ -44,7 +45,7 @@ export const VariableNodeView: React.FC<NodeViewProps> = (props) => {
         }
     }, [props.node.attrs.value, type]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | { target: { value: string } }) => {
         const newValue = e.target.value;
         setValue(newValue);
         props.updateAttributes({ value: newValue });
@@ -116,11 +117,11 @@ export const VariableNodeView: React.FC<NodeViewProps> = (props) => {
         case 'checkbox':
             return <CheckboxVariable label={label} value={value} onChange={handleCheckboxChange} />;
 
-        case 'radio':
-            return <RadioVariable label={label} value={value} options={options} onChange={handleValueChange} />;
-
         case 'range':
             return <RangeVariable label={label} value={value} min={min} max={max} step={step} onChange={handleValueChange} />;
+
+        case 'date-range':
+            return <DateRangeVariable label={label} value={value} onChange={handleValueChange} />;
 
         case 'date':
             return <DateVariable label={label} value={value} onChange={handleChange} />;

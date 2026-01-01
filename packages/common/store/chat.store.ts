@@ -67,6 +67,7 @@ type State = {
     editor: any;
     chatMode: ChatMode;
     context: string;
+    activeTemplate: any | null;
     imageAttachment: { base64?: string; file?: File };
     abortController: AbortController | null;
     threads: Thread[];
@@ -121,6 +122,7 @@ type Actions = {
     clearAllThreads: () => void;
     setCurrentSources: (sources: string[]) => void;
     setUseWebSearch: (useWebSearch: boolean) => void;
+    setActiveTemplate: (template: any) => void;
     setShowSuggestions: (showSuggestions: boolean) => void;
 };
 
@@ -455,6 +457,7 @@ export const useChatStore = create(
         activeThreadItemView: null,
         currentThread: null,
         currentThreadItem: null,
+        activeTemplate: null,
         imageAttachment: { base64: undefined, file: undefined },
         messageGroups: [],
         abortController: null,
@@ -511,6 +514,12 @@ export const useChatStore = create(
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useWebSearch }));
             set(state => {
                 state.useWebSearch = useWebSearch;
+            });
+        },
+
+        setActiveTemplate: (template: any) => {
+            set(state => {
+                state.activeTemplate = template;
             });
         },
 

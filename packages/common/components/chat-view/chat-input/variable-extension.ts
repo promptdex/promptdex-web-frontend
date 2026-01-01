@@ -24,14 +24,49 @@ export const VariableExtension = Node.create({
 
     addAttributes() {
         return {
-            label: { default: 'variable' },
-            value: { default: '' },
-            type: { default: 'text' },
-            options: { default: [] },
-            datasetId: { default: undefined },
-            min: { default: 0 },
-            max: { default: 100 },
-            step: { default: 1 },
+            label: {
+                default: 'variable',
+                parseHTML: element => element.getAttribute('data-label'),
+                renderHTML: attributes => ({ 'data-label': attributes.label }),
+            },
+            value: {
+                default: '',
+                parseHTML: element => element.getAttribute('data-value'),
+                renderHTML: attributes => ({ 'data-value': attributes.value }),
+            },
+            type: {
+                default: 'text',
+                parseHTML: element => element.getAttribute('data-var-type'),
+                renderHTML: attributes => ({ 'data-var-type': attributes.type }),
+            },
+            options: {
+                default: [],
+                parseHTML: element => {
+                    const val = element.getAttribute('data-options');
+                    return val ? JSON.parse(val) : [];
+                },
+                renderHTML: attributes => ({ 'data-options': JSON.stringify(attributes.options) }),
+            },
+            datasetId: {
+                default: undefined,
+                parseHTML: element => element.getAttribute('data-dataset-id'),
+                renderHTML: attributes => attributes.datasetId ? { 'data-dataset-id': attributes.datasetId } : {},
+            },
+            min: {
+                default: 0,
+                parseHTML: element => parseInt(element.getAttribute('data-min') || '0'),
+                renderHTML: attributes => ({ 'data-min': attributes.min }),
+            },
+            max: {
+                default: 100,
+                parseHTML: element => parseInt(element.getAttribute('data-max') || '100'),
+                renderHTML: attributes => ({ 'data-max': attributes.max }),
+            },
+            step: {
+                default: 1,
+                parseHTML: element => parseInt(element.getAttribute('data-step') || '1'),
+                renderHTML: attributes => ({ 'data-step': attributes.step }),
+            },
         };
     },
 

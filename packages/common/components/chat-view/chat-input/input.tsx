@@ -17,19 +17,24 @@ import { useAgentStream } from '@repo/common/hooks';
 import { useChatEditor } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { TemplateListing } from '@repo/common/components';
-import { ChatModeButton, GeneratingStatus, SendStopButton, WebSearchButton } from './chat-actions';
+import { ChatModeButton, DeepResearchButton, GeneratingStatus, SendStopButton, VoiceInputButton, WebSearchButton } from './chat-actions';
 import { ChatTemplates } from '../templates';
+import { ChatDatasets } from './chat-datasets';
 import { ChatEditor } from './chat-editor';
 import { ImageUpload } from './image-upload';
+import { ChatConnectors } from './chat-connectors';
+import { GenerationSelector } from './generation-selector';
 
 export const ChatInput = ({
     showGreeting = true,
     showBottomBar = true,
     isFollowUp = false,
+    forceBottomMode = false,
 }: {
     showGreeting?: boolean;
     showBottomBar?: boolean;
     isFollowUp?: boolean;
+    forceBottomMode?: boolean;
 }) => {
     const { isSignedIn } = useAuth();
 
@@ -62,7 +67,7 @@ export const ChatInput = ({
     const clearImageAttachment = useChatStore(state => state.clearImageAttachment);
     const stopGeneration = useChatStore(state => state.stopGeneration);
     const hasTextInput = !!editor?.getText();
-    const { dropzonProps, handleImageUpload } = useImageAttachment();
+    const { dropzonProps, handleImageUpload, handleFile } = useImageAttachment();
     const { push } = useRouter();
     const chatMode = useChatStore(state => state.chatMode);
     const sendMessage = async () => {
@@ -159,10 +164,15 @@ export const ChatInput = ({
                                             <GeneratingStatus />
                                         ) : (
                                             <Flex gap="xs" items="center" className="shrink-0">
+                                                <GenerationSelector />
                                                 <ChatModeButton />
                                                 {/* <AttachmentButton /> */}
+                                                <VoiceInputButton />
                                                 <WebSearchButton />
+                                                <DeepResearchButton />
                                                 <ChatTemplates />
+                                                <ChatDatasets />
+                                                <ChatConnectors />
                                                 {/* <ToolsMenu /> */}
                                                 <ImageUpload
                                                     id="image-attachment"
@@ -170,6 +180,7 @@ export const ChatInput = ({
                                                     tooltip="Image Attachment"
                                                     showIcon={true}
                                                     handleImageUpload={handleImageUpload}
+                                                    handleFile={handleFile}
                                                 />
                                             </Flex>
                                         )}
@@ -231,17 +242,17 @@ export const ChatInput = ({
     return (
         <div
             className={cn(
-                'bg-secondary w-full',
-                currentThreadId
-                    ? 'absolute bottom-0'
-                    : 'absolute inset-0 flex h-full w-full flex-col items-center justify-center'
+                'w-full pointer-events-none z-20',
+                (currentThreadId || forceBottomMode)
+                    ? 'absolute bottom-0 bg-gradient-to-t from-background via-background/80 to-transparent pb-6 pt-12'
+                    : 'absolute inset-0 flex h-full w-full flex-col items-center justify-center pointer-events-auto bg-background/50 backdrop-blur-sm'
             )}
         >
             <div
                 className={cn(
-                    'mx-auto flex w-full max-w-3xl flex-col items-start',
+                    'mx-auto flex w-full max-w-4xl flex-col items-start pointer-events-auto px-4',
                     !threadItemsLength && 'justify-start',
-                    size === 'sm' && 'px-8'
+                    // size === 'sm' && 'px-8' // Remove conditional padding that misaligns it
                 )}
             >
                 <Flex

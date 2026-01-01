@@ -3,10 +3,16 @@ import { DisableEnter, ShiftEnterToLineBreak } from '@repo/shared/utils';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Document } from '@tiptap/extension-document';
 import { HardBreak } from '@tiptap/extension-hard-break';
+import { Heading } from '@tiptap/extension-heading';
 import { Highlight } from '@tiptap/extension-highlight';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Placeholder } from '@tiptap/extension-placeholder';
 import { Text } from '@tiptap/extension-text';
+import { BulletList } from '@tiptap/extension-bullet-list';
+import { OrderedList } from '@tiptap/extension-ordered-list';
+import { ListItem } from '@tiptap/extension-list-item';
+import { Bold } from '@tiptap/extension-bold';
+import { Italic } from '@tiptap/extension-italic';
 
 import { Editor, useEditor } from '@tiptap/react';
 import { useEffect, useState } from 'react';
@@ -27,6 +33,12 @@ export const useChatEditor = (editorProps: {
             Document,
             Paragraph,
             Text,
+            Heading.configure({ levels: [1, 2, 3, 4, 5, 6] }),
+            BulletList,
+            OrderedList,
+            ListItem,
+            Bold,
+            Italic,
             Placeholder.configure({
                 placeholder: editorProps?.placeholder || 'Ask anything',
             }),

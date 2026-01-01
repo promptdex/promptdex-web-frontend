@@ -19,4 +19,4 @@ export * from './layout/view-header';
 export * from './display/history-item';
 export * from './mdx/mdx-components';
 export * from './mdx/use-mdx-chunks';
-export * from './search/search-results';
+export * from './directory';

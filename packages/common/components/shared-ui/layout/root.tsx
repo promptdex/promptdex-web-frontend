@@ -27,7 +27,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const setIsSettingOpen = useAppStore(state => state.setIsSettingsOpen);
 
     const containerClass =
-        'relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm';
+        'relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-xl bg-background w-full overflow-hidden shadow-2xl';
 
     useEffect(() => {
         plausible.trackPageview();
@@ -44,10 +44,6 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                     </span>
                 </div>
             </div>
-            <Flex className="hidden lg:flex">
-                <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
-            </Flex>
-
             <Drawer.Root
                 open={isMobileSidebarOpen}
                 direction="left"
@@ -83,6 +79,11 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 </motion.div>
                 <SettingsModal />
                 <CommandSearch />
+            </Flex>
+
+            {/* Sidebar (Right Side) */}
+            <Flex className="hidden lg:flex border-l border-border h-full bg-background">
+                <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
             </Flex>
 
             <Toaster />

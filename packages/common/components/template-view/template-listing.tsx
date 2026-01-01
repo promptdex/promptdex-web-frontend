@@ -25,7 +25,7 @@ export const TemplateListing = ({
         if (!editor) return;
 
         // Manually parse the content into nodes to ensure variables are created
-        const nodes = [];
+        const nodes: any[] = [];
         const regex = /\[(.*?)\]/g;
         let lastIndex = 0;
         let match;
@@ -38,16 +38,29 @@ export const TemplateListing = ({
                     text: content.substring(lastIndex, match.index),
                 });
             }
-            // Add the variable node
-            const [label, type, optionsStr] = match[1].split(':');
-            nodes.push({
-                type: 'variable',
-                attrs: {
-                    label,
-                    type: type || 'text',
-                    options: optionsStr ? optionsStr.split(',') : []
-                },
-            });
+            // Parse variable: "Label:type:options_or_params"
+            const parts = match[1].split(':');
+            const label = parts[0] || 'variable';
+            const varType = parts[1] || 'text';
+            const thirdPart = parts[2] || '';
+
+            const attrs: any = { label, type: varType };
+
+            // Handle different variable types
+            if (varType === 'dataset' || varType === 'combobox') {
+                attrs.datasetId = thirdPart;
+            } else if (varType === 'number' || varType === 'range') {
+                const [min, max, step] = thirdPart.split(',').map(Number);
+                attrs.min = min || 0;
+                attrs.max = max || 100;
+                attrs.step = step || 1;
+            } else if (varType === 'rating') {
+                attrs.max = parseInt(thirdPart) || 5;
+            } else {
+                attrs.options = thirdPart ? thirdPart.split(',') : [];
+            }
+
+            nodes.push({ type: 'variable', attrs });
             lastIndex = regex.lastIndex;
         }
         // Add remaining text

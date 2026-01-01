@@ -20,3 +20,4 @@ export * from './emoji-variable';
 export * from './multiselect-variable';
 export * from './code-variable';
 export * from './percentage-variable';
+export * from './date-range-variable';

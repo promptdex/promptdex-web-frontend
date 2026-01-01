@@ -1,5 +1,6 @@
 'use client';
 import { useRootContext } from '@repo/common/context';
+import { MOCK_CATEGORIES, MOCK_DATASETS } from '@repo/common/lib';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import {
     cn,
@@ -16,12 +17,14 @@ import {
     IconKey,
     IconMessageCircleFilled,
     IconPlus,
+    IconTemplate,
+    IconDatabase,
     IconTrash,
 } from '@tabler/icons-react';
 import moment from 'moment';
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
@@ -35,6 +38,11 @@ export const CommandSearch = () => {
     const clearThreads = useChatStore(state => state.clearAllThreads);
     const setIsSettingsOpen = useAppStore(state => state.setIsSettingsOpen);
     const setSettingTab = useAppStore(state => state.setSettingTab);
+    const [search, setSearch] = useState('');
+
+    // Flatten templates for search
+    const allTemplates = MOCK_CATEGORIES.flatMap(cat => cat.templates.map(t => ({ ...t, categoryName: cat.name, categoryIcon: cat.icon })));
+
     const groupedThreads: Record<string, typeof threads> = {
         today: [],
         yesterday: [],
@@ -51,7 +59,10 @@ export const CommandSearch = () => {
         previousMonths: 'Previous Months',
     };
 
-    threads.forEach(thread => {
+    // Filter threads based on search
+    const filteredThreads = threads.filter(t => t.title.toLowerCase().includes(search.toLowerCase()));
+
+    filteredThreads.forEach(thread => {
         const createdAt = moment(thread.createdAt);
         const now = moment();
         if (createdAt.isSame(now, 'day')) {
@@ -67,16 +78,19 @@ export const CommandSearch = () => {
         }
     });
 
+    // Filter datasets and templates
+    const filteredDatasets = MOCK_DATASETS.filter(d => d.name.toLowerCase().includes(search.toLowerCase()) || d.description.toLowerCase().includes(search.toLowerCase()));
+    const filteredTemplates = allTemplates.filter(t => t.title.toLowerCase().includes(search.toLowerCase()) || t.description.toLowerCase().includes(search.toLowerCase()));
+
+
     useEffect(() => {
         router.prefetch('/chat');
     }, [isCommandSearchOpen, threads, router]);
 
-    useEffect(() => {
-        if (isCommandSearchOpen) {
-        }
-    }, [isCommandSearchOpen]);
-
-    const onClose = () => setIsCommandSearchOpen(false);
+    const onClose = () => {
+        setIsCommandSearchOpen(false);
+        setSearch('');
+    };
 
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
@@ -133,7 +147,12 @@ export const CommandSearch = () => {
     return (
         <CommandDialog open={isCommandSearchOpen} onOpenChange={setIsCommandSearchOpen}>
             <div className="flex w-full flex-row items-center gap-2 p-0.5">
-                <CommandInput placeholder="Search..." className="w-full" />
+                <CommandInput
+                    placeholder="Search threads, templates, datasets..."
+                    className="w-full"
+                    value={search}
+                    onValueChange={setSearch}
+                />
                 <div className="flex shrink-0 items-center gap-1 px-2">
                     <Kbd className="h-5 w-5">
                         <IconCommand size={12} strokeWidth={2} className="shrink-0" />
@@ -146,11 +165,11 @@ export const CommandSearch = () => {
             </div>
             <CommandList className="max-h-[420px] overflow-y-auto p-0.5 pt-1.5">
                 <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup>
+                <CommandGroup heading="Actions">
                     {actions.map(action => (
                         <CommandItem
                             key={action.name}
-                            className="gap-"
+                            className="gap-2"
                             value={action.name}
                             onSelect={action.action}
                         >
@@ -163,6 +182,51 @@ export const CommandSearch = () => {
                         </CommandItem>
                     ))}
                 </CommandGroup>
+
+                {filteredTemplates.length > 0 && (
+                    <CommandGroup heading="Templates">
+                        {filteredTemplates.map(template => (
+                            <CommandItem
+                                key={template.id}
+                                value={`template-${template.id}-${template.title}`}
+                                className="gap-2"
+                                onSelect={() => {
+                                    router.push(`/template/${template.id}`);
+                                    onClose();
+                                }}
+                            >
+                                <IconTemplate size={14} strokeWidth={2} className="text-muted-foreground flex-shrink-0" />
+                                <div className="flex flex-col gap-0.5 overflow-hidden">
+                                    <span className="truncate">{template.title}</span>
+                                    <span className="text-[10px] text-muted-foreground truncate">{template.description}</span>
+                                </div>
+                            </CommandItem>
+                        ))}
+                    </CommandGroup>
+                )}
+
+                {filteredDatasets.length > 0 && (
+                    <CommandGroup heading="Datasets">
+                        {filteredDatasets.map(dataset => (
+                            <CommandItem
+                                key={dataset.id}
+                                value={`dataset-${dataset.id}-${dataset.name}`}
+                                className="gap-2"
+                                onSelect={() => {
+                                    router.push(`/dataset/${dataset.id}`);
+                                    onClose();
+                                }}
+                            >
+                                <IconDatabase size={14} strokeWidth={2} className="text-muted-foreground flex-shrink-0" />
+                                <div className="flex flex-col gap-0.5 overflow-hidden">
+                                    <span className="truncate">{dataset.name}</span>
+                                    <span className="text-[10px] text-muted-foreground truncate">{dataset.description}</span>
+                                </div>
+                            </CommandItem>
+                        ))}
+                    </CommandGroup>
+                )}
+
                 {Object.entries(groupedThreads).map(
                     ([key, threads]) =>
                         threads.length > 0 && (
@@ -189,9 +253,6 @@ export const CommandSearch = () => {
                                         <span className="w-full truncate font-normal">
                                             {thread.title}
                                         </span>
-                                        {/* <span className="text-muted-foreground flex-shrink-0 pl-4 text-xs !font-normal">
-                                            {moment(thread.createdAt).fromNow(true)}
-                                        </span> */}
                                     </CommandItem>
                                 ))}
                             </CommandGroup>

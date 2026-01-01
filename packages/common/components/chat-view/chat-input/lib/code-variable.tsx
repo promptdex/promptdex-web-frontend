@@ -10,18 +10,17 @@ interface CodeVariableProps {
 
 export const CodeVariable: React.FC<CodeVariableProps> = ({ label, value, onChange }) => {
     return (
-        <NodeViewWrapper as="span" className="inline-block mx-1 align-top my-4 w-full max-w-[600px]">
-            <div className="flex flex-col gap-2 p-4 rounded-3xl bg-zinc-900/80 backdrop-blur-md border border-white/10 transition-all hover:border-white/20 group animate-in fade-in slide-in-from-top-2 duration-500">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 px-1">
-                    <IconCode size={14} />
-                    <span>{label}</span>
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto">Code Block</span>
+        <NodeViewWrapper as="span" className="block my-2 w-full max-w-full">
+            <div className="flex flex-col rounded-xl bg-zinc-950/50 border border-white/10 overflow-hidden group">
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 border-b border-white/5">
+                    <IconCode size={12} className="text-muted-foreground" />
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground/70 select-none">{label}</span>
                 </div>
                 <Textarea
                     value={value}
                     onChange={onChange}
-                    placeholder="// Enter your code here..."
-                    className="min-h-[160px] w-full resize-y border-0 bg-zinc-950/50 rounded-xl p-4 focus-visible:ring-1 focus-visible:ring-primary/30 shadow-none font-mono text-sm leading-relaxed placeholder:text-muted-foreground/20 text-green-400"
+                    placeholder="// content..."
+                    className="min-h-[120px] w-full resize-y border-0 bg-transparent p-3 focus-visible:ring-0 shadow-none font-mono text-sm leading-relaxed placeholder:text-muted-foreground/20 text-green-400"
                     onClick={(e) => e.stopPropagation()}
                     onKeyDown={(e) => {
                         if (e.key === 'Tab') {

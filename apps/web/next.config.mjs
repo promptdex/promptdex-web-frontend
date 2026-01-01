@@ -34,9 +34,6 @@ const nextConfig = {
 
         return config;
     },
-    async redirects() {
-        return [{ source: '/', destination: '/chat', permanent: true }];
-    },
 };
 
 export default withSentryConfig(nextConfig, {

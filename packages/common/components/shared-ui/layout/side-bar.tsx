@@ -41,35 +41,7 @@ import moment from 'moment';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
-interface SidebarLinkProps {
-    href: string;
-    icon: React.ElementType;
-    label: string;
-    active: boolean;
-}
-
-const SidebarLink = ({ href, icon: Icon, label, active }: SidebarLinkProps) => {
-    const { isSidebarOpen } = useAppStore(state => state);
-    return (
-        <Link href={href} className={isSidebarOpen ? 'w-full' : ''}>
-            <Button
-                size={isSidebarOpen ? 'sm' : 'icon-sm'}
-                variant={active ? 'default' : 'ghost'}
-                rounded="lg"
-                tooltip={isSidebarOpen ? undefined : label}
-                tooltipSide="right"
-                className={cn(
-                    isSidebarOpen && 'relative w-full',
-                    'justify-start',
-                    !isSidebarOpen && 'justify-center'
-                )}
-            >
-                <Icon size={16} strokeWidth={2} />
-                {isSidebarOpen && label}
-            </Button>
-        </Link>
-    );
-};
+import { SidebarLink } from './sidebar-link';
 
 export const Sidebar = () => {
     const { threadId: currentThreadId } = useParams();

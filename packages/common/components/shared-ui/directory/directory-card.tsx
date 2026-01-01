@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 interface DirectoryCardProps {
     title: string;
-    description?: string;
+    description?: string | React.ReactNode;
     image?: string;
     href?: string;
     onClick?: () => void;

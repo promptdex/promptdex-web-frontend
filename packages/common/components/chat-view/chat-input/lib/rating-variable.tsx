@@ -1,5 +1,4 @@
 import { NodeViewWrapper } from '@tiptap/react';
-import { cn } from '@repo/ui';
 import { IconStar, IconStarFilled } from '@tabler/icons-react';
 
 interface RatingVariableProps {
@@ -13,22 +12,22 @@ export const RatingVariable: React.FC<RatingVariableProps> = ({ label, value, ma
     const rating = parseInt(value) || 0;
 
     return (
-        <NodeViewWrapper as="span" className="inline-block mx-1 align-middle relative my-2">
-            <div className="flex flex-col gap-2 px-5 py-3 rounded-[20px] bg-white/[0.03] dark:bg-black/[0.1] backdrop-blur-md border border-white/10 dark:border-white/5 transition-all hover:bg-white/[0.05] animate-in fade-in duration-500">
-                <div className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 px-0.5">
+        <NodeViewWrapper as="span" className="inline-block mx-1 align-middle relative my-1">
+            <div className="flex items-center gap-3 h-9 px-3 rounded-lg bg-white/[0.03] dark:bg-black/[0.1] backdrop-blur-md border border-white/10 dark:border-white/5 transition-all hover:bg-white/[0.05] min-w-[140px] group">
+                <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground/50 shrink-0 select-none">
                     {label}
                 </div>
-                <div className="flex gap-1">
+                <div className="flex items-center gap-0.5">
                     {Array.from({ length: max }, (_, i) => (
                         <button
                             key={i}
                             onClick={() => onChange(String(i + 1))}
-                            className="transition-transform hover:scale-125 focus:outline-none"
+                            className="transition-transform hover:scale-125 focus:outline-none p-0.5"
                         >
                             {i < rating ? (
-                                <IconStarFilled size={24} className="text-yellow-400" />
+                                <IconStarFilled size={14} className="text-yellow-400" />
                             ) : (
-                                <IconStar size={24} className="text-muted-foreground/30 hover:text-yellow-400/50" />
+                                <IconStar size={14} className="text-muted-foreground/30 hover:text-yellow-400/50" />
                             )}
                         </button>
                     ))}
